@@ -1,14 +1,26 @@
-#app, .grid, .game-columns, .column-labels, .game-board {
+#app, .grid, .game-columns, .row-label, .column-labels, .game-board {
   display: flex;
+}
+
+.row-label, .column-label {
+  justify-content: center;
+  align-items: center;
 }
 
 .game-columns {
   flex-flow: column nowrap;
 }
 
-.sea {
+.row-labels {
+  margin-top: 2rem;
+}
+
+.row-label, .column-label, .sea {
   width: 2rem;
   height: 2rem;
+}
+
+.sea {
   background-color: lightblue;
   border: 0.0625rem solid mediumblue
 }

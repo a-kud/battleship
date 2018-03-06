@@ -1,10 +1,9 @@
-#game-wrapper {
-  display: flex
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
 
-.sea {
-  width: 1rem;
-  height: 1rem;
-  background-color: lightblue;
-  border: 0.0625rem solid mediumblue
+*, *:before, *:after {
+  box-sizing: border-box;
 }
