@@ -1,28 +1,14 @@
-.App {
-  text-align: center;
+#app, .grid, .game-columns, .column-labels, .game-board {
+  display: flex;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.game-columns {
+  flex-flow: column nowrap;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.sea {
+  width: 2rem;
+  height: 2rem;
+  background-color: lightblue;
+  border: 0.0625rem solid mediumblue
 }

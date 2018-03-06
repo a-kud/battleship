@@ -15,7 +15,7 @@ class Grid extends Component {
 
   render () {
     const sea = this.createSea()
-    return sea.map(row => {
+    const filledSea = sea.map(row => {
       const seaRow = row.map(cell => (
         <div className='sea' key={generateQuickGuid()} />
       ))
@@ -25,6 +25,7 @@ class Grid extends Component {
         </div>
       )
     })
+    return <div className='grid'>{filledSea}</div>
   }
 }
 
