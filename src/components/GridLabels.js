@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import { generateQuickGuid } from '../utils/helpers'
+
 export default class GridLabel extends Component {
   render () {
     const { row, column } = this.props
@@ -9,14 +11,20 @@ export default class GridLabel extends Component {
       return (
         <div className='row-labels'>
           {labels.map((label, i) => (
-            <div className='row-label'>{rowNames.substr(i, 1)}</div>
+            <div className='row-label' key={generateQuickGuid()}>
+              {rowNames.substr(i, 1)}
+            </div>
           ))}
         </div>
       )
     } else if (column) {
       return (
         <div className='column-labels'>
-          {labels.map((label, i) => <div className='column-label'>{i}</div>)}
+          {labels.map((label, i) => (
+            <div className='column-label' key={generateQuickGuid()}>
+              {i}
+            </div>
+          ))}
         </div>
       )
     }
