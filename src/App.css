@@ -1,4 +1,4 @@
-#app, .grid, .game-columns, .row-label, .column-labels, .game-board {
+#app, .grid, .game-columns, .row-label, .column-labels, .column-label, .game-board {
   display: flex;
 }
 
@@ -20,6 +20,9 @@
   height: 2rem;
 }
 
+.grid {
+  border: 0.125rem solid mediumblue
+}
 .sea {
   background-color: lightblue;
   border: 0.0625rem solid mediumblue
