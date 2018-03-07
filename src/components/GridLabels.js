@@ -6,7 +6,7 @@ export default class GridLabel extends Component {
   render () {
     const { row, column } = this.props
     const labels = Array.from({ length: 10 })
-    const rowNames = 'ABCDEFGHIJ'
+    const rowContent = 'ABCDEFGHIJ'
     const classNameGroup = row ? 'row-labels' : 'column-labels'
     const className = row ? 'row-label' : 'column-label'
 
@@ -14,32 +14,10 @@ export default class GridLabel extends Component {
       <div className={classNameGroup}>
         {labels.map((label, i) => (
           <div className={className} key={generateQuickGuid()}>
-            <span>{column ? i : rowNames.substr(i, 1)}</span>
+            <span>{column ? i : rowContent.substr(i, 1)}</span>
           </div>
         ))}
       </div>
     )
-
-    // if (row) {
-    //   return (
-    //     <div className='row-labels'>
-    //       {labels.map((label, i) => (
-    //         <div className='row-label' key={generateQuickGuid()}>
-    //           <span>{rowNames.substr(i, 1)}</span>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   )
-    // } else if (column) {
-    //   return (
-    //     <div className='column-labels'>
-    //       {labels.map((label, i) => (
-    //         <div className='column-label' key={generateQuickGuid()}>
-    //           <span>{i}</span>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   )
-    // }
   }
 }
