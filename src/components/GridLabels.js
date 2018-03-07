@@ -7,26 +7,39 @@ export default class GridLabel extends Component {
     const { row, column } = this.props
     const labels = Array.from({ length: 10 })
     const rowNames = 'ABCDEFGHIJ'
-    if (row) {
-      return (
-        <div className='row-labels'>
-          {labels.map((label, i) => (
-            <div className='row-label' key={generateQuickGuid()}>
-              <span>{rowNames.substr(i, 1)}</span>
-            </div>
-          ))}
-        </div>
-      )
-    } else if (column) {
-      return (
-        <div className='column-labels'>
-          {labels.map((label, i) => (
-            <div className='column-label' key={generateQuickGuid()}>
-              <span>{i}</span>
-            </div>
-          ))}
-        </div>
-      )
-    }
+    const classNameGroup = row ? 'row-labels' : 'column-labels'
+    const className = row ? 'row-label' : 'column-label'
+
+    return (
+      <div className={classNameGroup}>
+        {labels.map((label, i) => (
+          <div className={className} key={generateQuickGuid()}>
+            <span>{column ? i : rowNames.substr(i, 1)}</span>
+          </div>
+        ))}
+      </div>
+    )
+
+    // if (row) {
+    //   return (
+    //     <div className='row-labels'>
+    //       {labels.map((label, i) => (
+    //         <div className='row-label' key={generateQuickGuid()}>
+    //           <span>{rowNames.substr(i, 1)}</span>
+    //         </div>
+    //       ))}
+    //     </div>
+    //   )
+    // } else if (column) {
+    //   return (
+    //     <div className='column-labels'>
+    //       {labels.map((label, i) => (
+    //         <div className='column-label' key={generateQuickGuid()}>
+    //           <span>{i}</span>
+    //         </div>
+    //       ))}
+    //     </div>
+    //   )
+    // }
   }
 }
