@@ -1,24 +1,62 @@
 import React, { Component } from 'react'
 import './App.css'
 
-import Grid from './components/Grid'
-import GridLabels from './components/GridLabels'
+// import Grid from './components/Grid'
+// import GridLabels from './components/GridLabels'
+import { Board } from './components/Board'
 
 class App extends Component {
-  render () {
-    const gameBoard = (
-      <div className='game-board'>
-        <GridLabels row />
-        <div className='game-columns'>
-          <GridLabels column />
-          <Grid />
-        </div>
-      </div>
+  state = {
+    settings: {
+      boardWidth: 10,
+      boardHeight: 10
+    },
+    gameStarted: false,
+    userBoard: [],
+    aiBoard: []
+  }
+
+  /**
+   * Generates game grid of width by height size
+   * width, height - numbers
+   * returns array
+   */
+  // createSea = (width, height) => (
+  //   Array.from({ length: width }, () =>
+  //     Array.from({ length: height }, () => ({
+  //       type: 'sea',
+  //       x: i,
+  //       y: i
+  //     }))
+  //   )
+  // )
+  createSea = (width, height) => {
+    const rows = Array.from({ length: height })
+    const columns = Array.from({ length: width })
+    return rows.map((row, y) =>
+      columns.map((column, x) => ({
+        x: x,
+        y: y,
+        type: 'sea'
+      }))
     )
+  }
+
+  componentWillMount () {
+    const height = this.state.settings.boardHeight
+    const width = this.state.settings.boardWidth
+    const sea = this.createSea(height, width)
+    this.setState({
+      userBoard: sea,
+      aiBoard: sea
+    })
+  }
+
+  render () {
     return (
       <div id='app'>
-        {gameBoard}
-        {gameBoard}
+        <Board board={this.state.userBoard} />
+        <Board board={this.state.aiBoard} />
       </div>
     )
   }

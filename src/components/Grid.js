@@ -2,23 +2,21 @@ import React, { Component } from 'react'
 
 import Cell from './Cell'
 import { generateQuickGuid } from '../utils/helpers'
+import { object, arrayOf } from 'prop-types'
 
 class Grid extends Component {
-  /**
-   * Creates 2d array 10x10
-   */
-  createSea = () =>
-    Array.from({ length: 10 }, () =>
-      Array.from({ length: 10 }, () => ({
-        type: 'sea'
-      }))
-    )
+  static propTypes = {
+    sea: arrayOf(arrayOf(object))
+  }
 
   render () {
-    const sea = this.createSea()
+    const { sea } = this.props
     const filledSea = sea.map((row, y) => {
       const seaRow = row.map((cell, x) => (
-        <Cell coord={{ x: x, y: y }} key={generateQuickGuid()} />
+        <Cell
+          coord={{ x: sea[y][x].x, y: sea[y][y].y }}
+          key={generateQuickGuid()}
+        />
       ))
       return (
         <div className='row' key={generateQuickGuid()}>
