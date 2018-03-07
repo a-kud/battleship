@@ -2,6 +2,7 @@
   display: flex;
 }
 
+
 .row-label, .column-label {
   justify-content: center;
   align-items: center;

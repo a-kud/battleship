@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import Cell from './Cell'
 import { generateQuickGuid } from '../utils/helpers'
 
 class Grid extends Component {
@@ -15,9 +16,9 @@ class Grid extends Component {
 
   render () {
     const sea = this.createSea()
-    const filledSea = sea.map(row => {
-      const seaRow = row.map(cell => (
-        <div className='sea' key={generateQuickGuid()} />
+    const filledSea = sea.map((row, y) => {
+      const seaRow = row.map((cell, x) => (
+        <Cell coord={{ x: x, y: y }} key={generateQuickGuid()} />
       ))
       return (
         <div className='row' key={generateQuickGuid()}>

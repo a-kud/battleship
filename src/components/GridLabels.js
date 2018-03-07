@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
 
 import { generateQuickGuid } from '../utils/helpers'
+import { bool } from 'prop-types'
 
 export default class GridLabel extends Component {
+  static propTypes = {
+    row: bool,
+    column: bool
+  }
+
   render () {
     const { row, column } = this.props
     const labels = Array.from({ length: 10 })
