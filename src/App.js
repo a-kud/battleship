@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
 
-// import Grid from './components/Grid'
-// import GridLabels from './components/GridLabels'
 import { Board } from './components/Board'
 
 class App extends Component {
@@ -21,15 +19,6 @@ class App extends Component {
    * width, height - numbers
    * returns array
    */
-  // createSea = (width, height) => (
-  //   Array.from({ length: width }, () =>
-  //     Array.from({ length: height }, () => ({
-  //       type: 'sea',
-  //       x: i,
-  //       y: i
-  //     }))
-  //   )
-  // )
   createSea = (width, height) => {
     const rows = Array.from({ length: height })
     const columns = Array.from({ length: width })
