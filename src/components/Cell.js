@@ -1,15 +1,24 @@
 import React, { Component } from 'react'
-import { object } from 'prop-types'
+import { object, string } from 'prop-types'
 
 class Cell extends Component {
   static propTypes = {
-    coord: object.isRequired
+    coord: object.isRequired,
+    className: string
   }
+
+  static defaultProps = {
+    className: 'sea'
+  }
+
   handleClick = () => {
-    console.log(this.props.coord)
+    const { coord } = this.props
+    this.props.onClick(coord.y, coord.x)
   }
+
   render () {
-    return <div className='sea' onClick={this.handleClick} />
+    const { className } = this.props
+    return <div className={className} onClick={this.handleClick} />
   }
 }
 

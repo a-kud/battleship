@@ -12,7 +12,12 @@ class App extends Component {
     },
     gameStarted: false,
     userBoard: [],
-    aiBoard: []
+    aiBoard: [],
+    userSetup: {
+      isComplete: false,
+      step: 0,
+      text: ['Please start game', 'Place the 1st one cell ship']
+    }
   }
 
   /**
@@ -32,6 +37,16 @@ class App extends Component {
     )
   }
 
+  handleGameStart = () => {
+    const currentStep = this.state.userSetup.step
+    this.setState({
+      userSetup: { ...this.state.userSetup, step: currentStep + 1 }
+    })
+  }
+
+  handleClick = (x, y) => {
+    console.log(x, y)
+  }
   componentWillMount () {
     const height = this.state.settings.boardHeight
     const width = this.state.settings.boardWidth
@@ -45,11 +60,19 @@ class App extends Component {
   render () {
     return (
       <div id='app'>
-        <Button variant='raised' color='primary'>
+        <Button variant='raised' onClick={this.handleGameStart} color='primary'>
           Start
         </Button>
-        <Board board={this.state.userBoard} />
-        <Board board={this.state.aiBoard} />
+        <div>
+          <h2>Game status:</h2>
+          <p>{this.state.userSetup.text[this.state.userSetup.step]}</p>
+        </div>
+        <Board
+          board={this.state.userBoard}
+          label={'Self'}
+          onClick={this.handleClick}
+        />
+        <Board board={this.state.aiBoard} label={'Opponent'} />
       </div>
     )
   }

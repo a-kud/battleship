@@ -9,11 +9,16 @@ class Grid extends Component {
     sea: arrayOf(arrayOf(object))
   }
 
+  handleClick = (x, y) => {
+    this.props.onClick(x, y)
+  }
+
   render () {
     const { sea } = this.props
     const filledSea = sea.map((row, y) => {
       const seaRow = row.map((cell, x) => (
         <Cell
+          onClick={this.handleClick}
           coord={{ x: sea[y][x].x, y: sea[y][y].y }}
           key={generateQuickGuid()}
         />
