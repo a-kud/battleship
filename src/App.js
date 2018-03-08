@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 
 import { Board } from './components/Board'
+import Button from 'material-ui/Button'
 
 class App extends Component {
   state = {
@@ -44,6 +45,9 @@ class App extends Component {
   render () {
     return (
       <div id='app'>
+        <Button variant='raised' color='primary'>
+          Start
+        </Button>
         <Board board={this.state.userBoard} />
         <Board board={this.state.aiBoard} />
       </div>
