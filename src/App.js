@@ -50,7 +50,8 @@ class App extends Component {
   handleGameStart = () => {
     const currentStep = this.state.userSetup.step
     this.setState({
-      userSetup: { ...this.state.userSetup, step: currentStep + 1 }
+      userSetup: { ...this.state.userSetup, step: currentStep + 1 },
+      gameStarted: true
     })
   }
 
@@ -133,7 +134,12 @@ class App extends Component {
   render () {
     return (
       <div id='app'>
-        <Button variant='raised' onClick={this.handleGameStart} color='primary'>
+        <Button
+          variant='raised'
+          onClick={this.handleGameStart}
+          color='primary'
+          disabled={this.state.gameStarted}
+        >
           Start
         </Button>
         <div>
