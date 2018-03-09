@@ -2,7 +2,6 @@
   display: flex;
 }
 
-
 .row-label, .column-label {
   justify-content: center;
   align-items: center;
@@ -16,7 +15,7 @@
   margin-top: 2rem;
 }
 
-.row-label, .column-label, .sea {
+.row-label, .column-label, .sea, .ship {
   width: 2rem;
   height: 2rem;
 }
@@ -27,4 +26,8 @@
 .sea {
   background-color: lightblue;
   border: 0.0625rem solid mediumblue
+}
+
+.ship {
+  background-color: grey;
 }

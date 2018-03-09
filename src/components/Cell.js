@@ -4,6 +4,7 @@ import { object, string } from 'prop-types'
 class Cell extends Component {
   static propTypes = {
     coord: object.isRequired,
+    type: string,
     className: string
   }
 
@@ -17,8 +18,9 @@ class Cell extends Component {
   }
 
   render () {
-    const { className } = this.props
-    return <div className={className} onClick={this.handleClick} />
+    // const { className } = this.props
+    const { type } = this.props
+    return <div className={type} onClick={this.handleClick} />
   }
 }
 

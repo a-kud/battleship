@@ -20,6 +20,7 @@ class Grid extends Component {
         <Cell
           onClick={this.handleClick}
           coord={{ x: sea[y][x].x, y: sea[y][y].y }}
+          type={sea[x][y].type}
           key={generateQuickGuid()}
         />
       ))

@@ -20,11 +20,13 @@ class App extends Component {
         'Please start game',
         'Place first destroyer. It takes one cell.',
         'Place second destroyer. One cell.',
-        'Place a cruiser. Four cell length'
+        'Place a cruiser. Four cell length.',
+        'Place a battleship. Four cells. L-shaped.'
       ],
       destroyer1Coordinates: [],
       destroyer2Coordinates: [],
-      cruiserCoordinates: []
+      cruiserCoordinates: [],
+      battleshipCoordinates: []
     }
   }
 
@@ -53,40 +55,78 @@ class App extends Component {
   }
 
   handleClick = (x, y) => {
-    const setShipCoordinates = (shipClass, length) => {
-      // if (this.state.userSetup[shipClass].length > length) {
-      this.setState(prevState => ({
-        userSetup: {
-          ...prevState.userSetup,
-          step: prevState.userSetup.step + 1,
-          [shipClass]: [...prevState.userSetup[shipClass], x, y]
+    const setShipCoordinates = (shipClass, length = 1) => {
+      const currentStep = this.state.userSetup.step
+      const isCoordinatesNotReady =
+        this.state.userSetup[shipClass].length < length - 1
+      this.setState(prevState => {
+        if (currentStep === 4 && isCoordinatesNotReady) {
+          return {
+            userSetup: {
+              ...prevState.userSetup,
+              [shipClass]: [...prevState.userSetup[shipClass], [x, y]],
+              isComplete: true
+            }
+          }
         }
-      }))
-      // }
+        if ((currentStep === 3 || currentStep === 4) && isCoordinatesNotReady) {
+          return {
+            userSetup: {
+              ...prevState.userSetup,
+              [shipClass]: [...prevState.userSetup[shipClass], [x, y]]
+            }
+          }
+        }
+
+        return {
+          userSetup: {
+            ...prevState.userSetup,
+            step: prevState.userSetup.step + 1,
+            [shipClass]: [...prevState.userSetup[shipClass], [x, y]]
+          }
+        }
+      })
     }
 
     switch (this.state.userSetup.step) {
       case 1: {
-        setShipCoordinates('destroyer1Coordinates', 1)
+        setShipCoordinates('destroyer1Coordinates')
+        const userBoardCopy = [...this.state.userBoard]
+        userBoardCopy[y][x].type = 'ship'
+        this.setState({ userBoard: userBoardCopy })
         break
       }
       case 2: {
-        setShipCoordinates('destroyer2Coordinates', 1)
+        setShipCoordinates('destroyer2Coordinates')
+        const userBoardCopy = [...this.state.userBoard]
+        userBoardCopy[y][x].type = 'ship'
+        this.setState({ userBoard: userBoardCopy })
         break
       }
       case 3: {
         setShipCoordinates('cruiserCoordinates', 4)
+        const userBoardCopy = [...this.state.userBoard]
+        userBoardCopy[y][x].type = 'ship'
+        this.setState({ userBoard: userBoardCopy })
         break
       }
+      case 4: {
+        setShipCoordinates('battleshipCoordinates', 4)
+        const userBoardCopy = [...this.state.userBoard]
+        userBoardCopy[y][x].type = 'ship'
+        this.setState({ userBoard: userBoardCopy })
+        break
+      }
+      default:
+        break
     }
   }
   componentWillMount () {
     const height = this.state.settings.boardHeight
     const width = this.state.settings.boardWidth
-    const sea = this.createSea(height, width)
     this.setState({
-      userBoard: sea,
-      aiBoard: sea
+      userBoard: this.createSea(height, width),
+      aiBoard: this.createSea(height, width)
     })
   }
 
