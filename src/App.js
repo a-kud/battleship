@@ -16,7 +16,15 @@ class App extends Component {
     userSetup: {
       isComplete: false,
       step: 0,
-      text: ['Please start game', 'Place the 1st one cell ship']
+      text: [
+        'Please start game',
+        'Place first destroyer. It takes one cell.',
+        'Place second destroyer. One cell.',
+        'Place a cruiser. Four cell length'
+      ],
+      destroyer1Coordinates: [],
+      destroyer2Coordinates: [],
+      cruiserCoordinates: []
     }
   }
 
@@ -45,7 +53,32 @@ class App extends Component {
   }
 
   handleClick = (x, y) => {
-    console.log(x, y)
+    const setShipCoordinates = (shipClass, length) => {
+      // if (this.state.userSetup[shipClass].length > length) {
+      this.setState(prevState => ({
+        userSetup: {
+          ...prevState.userSetup,
+          step: prevState.userSetup.step + 1,
+          [shipClass]: [...prevState.userSetup[shipClass], x, y]
+        }
+      }))
+      // }
+    }
+
+    switch (this.state.userSetup.step) {
+      case 1: {
+        setShipCoordinates('destroyer1Coordinates', 1)
+        break
+      }
+      case 2: {
+        setShipCoordinates('destroyer2Coordinates', 1)
+        break
+      }
+      case 3: {
+        setShipCoordinates('cruiserCoordinates', 4)
+        break
+      }
+    }
   }
   componentWillMount () {
     const height = this.state.settings.boardHeight

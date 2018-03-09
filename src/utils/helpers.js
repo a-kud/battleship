@@ -4,3 +4,11 @@ export function generateQuickGuid () {
     .toString(18)
     .substring(2, 10)
 }
+
+/**
+ *
+ * @param {number} x
+ * @param {number} y
+ * @param {array} grid
+ */
+export function isValidPlacement (grid, x, y) {}
