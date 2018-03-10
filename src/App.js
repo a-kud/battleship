@@ -3,6 +3,7 @@ import './App.css'
 
 import { Board } from './components/Board'
 import Button from 'material-ui/Button'
+import { isValidPlacement } from './utils/helpers'
 
 class App extends Component {
   state = {
@@ -56,6 +57,7 @@ class App extends Component {
   }
 
   handleClick = (x, y) => {
+    console.log(x, y)
     const setShipCoordinates = (shipClass, length = 1) => {
       const currentStep = this.state.userSetup.step
       const isCoordinatesNotReady =
@@ -89,33 +91,45 @@ class App extends Component {
       })
     }
 
+    const updateBoard = () => {
+      const userBoardCopy = [...this.state.userBoard]
+      userBoardCopy[x][y].type = 'ship'
+      this.setState({ userBoard: userBoardCopy })
+    }
+
     switch (this.state.userSetup.step) {
       case 1: {
-        setShipCoordinates('destroyer1Coordinates')
-        const userBoardCopy = [...this.state.userBoard]
-        userBoardCopy[y][x].type = 'ship'
-        this.setState({ userBoard: userBoardCopy })
+        if (isValidPlacement(this.state.userBoard, x, y, 1)) {
+          setShipCoordinates('destroyer1Coordinates')
+          updateBoard()
+        } else {
+          alert('invalid coordinates')
+        }
+
         break
       }
       case 2: {
-        setShipCoordinates('destroyer2Coordinates')
-        const userBoardCopy = [...this.state.userBoard]
-        userBoardCopy[y][x].type = 'ship'
-        this.setState({ userBoard: userBoardCopy })
+        if (isValidPlacement(this.state.userBoard, x, y, 1)) {
+          setShipCoordinates('destroyer2Coordinates')
+          updateBoard()
+        } else {
+          alert('invalid coordinates')
+        }
+
         break
       }
       case 3: {
-        setShipCoordinates('cruiserCoordinates', 4)
-        const userBoardCopy = [...this.state.userBoard]
-        userBoardCopy[y][x].type = 'ship'
-        this.setState({ userBoard: userBoardCopy })
+        if (isValidPlacement(this.state.userBoard, x, y)) {
+          setShipCoordinates('cruiserCoordinates', 4)
+          updateBoard()
+        } else {
+          alert('invalid coordinates')
+        }
         break
       }
       case 4: {
         setShipCoordinates('battleshipCoordinates', 4)
-        const userBoardCopy = [...this.state.userBoard]
-        userBoardCopy[y][x].type = 'ship'
-        this.setState({ userBoard: userBoardCopy })
+        updateBoard()
         break
       }
       default:

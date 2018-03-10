@@ -14,7 +14,7 @@ class Cell extends Component {
 
   handleClick = () => {
     const { coord } = this.props
-    this.props.onClick(coord.y, coord.x)
+    this.props.onClick(coord.x, coord.y)
   }
 
   render () {

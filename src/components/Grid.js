@@ -15,11 +15,11 @@ class Grid extends Component {
 
   render () {
     const { sea } = this.props
-    const filledSea = sea.map((row, y) => {
-      const seaRow = row.map((cell, x) => (
+    const filledSea = sea.map((row, x) => {
+      const seaRow = row.map((cell, y) => (
         <Cell
           onClick={this.handleClick}
-          coord={{ x: sea[y][x].x, y: sea[y][y].y }}
+          coord={{ x: sea[y][x].x, y: sea[y][x].y }}
           type={sea[x][y].type}
           key={generateQuickGuid()}
         />
