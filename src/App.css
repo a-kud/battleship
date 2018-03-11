@@ -28,6 +28,6 @@
   border: 0.0625rem solid mediumblue
 }
 
-.ship {
+.ship, .ship-set {
   background-color: grey;
 }

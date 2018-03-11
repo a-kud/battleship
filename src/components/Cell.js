@@ -5,7 +5,7 @@ class Cell extends Component {
   static propTypes = {
     coord: object.isRequired,
     type: string,
-    className: string
+    label: string
   }
 
   static defaultProps = {
@@ -13,8 +13,13 @@ class Cell extends Component {
   }
 
   handleClick = () => {
-    const { coord } = this.props
-    this.props.onClick(coord.x, coord.y)
+    const { coord, label } = this.props
+    if (label === 'Self') {
+      this.props.onClick(coord.x, coord.y)
+    }
+    if (label === 'Opponent') {
+      console.log(coord.x, coord.y)
+    }
   }
 
   render () {

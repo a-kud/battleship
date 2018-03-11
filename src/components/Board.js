@@ -16,7 +16,7 @@ export function Board ({ board, label, onClick }) {
       <GridLabels row />
       <div className='game-columns'>
         <GridLabels column />
-        <Grid onClick={onClick} sea={board} />
+        <Grid onClick={onClick} sea={board} label={label} />
       </div>
     </div>
   )

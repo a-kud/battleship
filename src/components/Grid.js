@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 
 import Cell from './Cell'
 import { generateQuickGuid } from '../utils/helpers'
-import { object, arrayOf } from 'prop-types'
+import { object, arrayOf, string } from 'prop-types'
 
 class Grid extends Component {
   static propTypes = {
-    sea: arrayOf(arrayOf(object))
+    sea: arrayOf(arrayOf(object)),
+    label: string
   }
 
   handleClick = (x, y) => {
@@ -14,13 +15,14 @@ class Grid extends Component {
   }
 
   render () {
-    const { sea } = this.props
+    const { sea, label } = this.props
     const filledSea = sea.map((row, x) => {
       const seaRow = row.map((cell, y) => (
         <Cell
           onClick={this.handleClick}
           coord={{ x: sea[y][x].x, y: sea[y][x].y }}
-          type={sea[x][y].type}
+          type={label === 'Self' ? sea[x][y].type : 'sea'}
+          label={label}
           key={generateQuickGuid()}
         />
       ))

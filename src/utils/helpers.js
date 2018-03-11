@@ -23,7 +23,6 @@ export function isValidPlacement (grid, x, y, shipLength = 4) {
         }
       }
     }
-    console.log(types)
     return !types.includes('ship')
   }
 
@@ -38,26 +37,43 @@ export function isValidPlacement (grid, x, y, shipLength = 4) {
 
   if (grid[x][y].type === 'sea' && shipLength > 1) {
     for (let i = 1; i < shipLength; i += 1) {
-      console.log('foo')
       if (y - i >= 0) {
         alreadyPlacedCellCountNorth =
-          grid[x][y - i].type === 'ship' ? alreadyPlacedCellCountNorth + 1 : 0
+          grid[x][y - i].type === 'ship'
+            ? alreadyPlacedCellCountNorth + 1
+            : alreadyPlacedCellCountNorth
       }
       if (y + i < 10) {
         alreadyPlacedCellCountSouth =
-          grid[x][y + i].type === 'ship' ? alreadyPlacedCellCountSouth + 1 : 0
+          grid[x][y + i].type === 'ship'
+            ? alreadyPlacedCellCountSouth + 1
+            : alreadyPlacedCellCountSouth
       }
       if (x - i >= 0) {
         alreadyPlacedCellCountWest =
-          grid[x - i][y].type === 'ship' ? alreadyPlacedCellCountWest + 1 : 0
+          grid[x - i][y].type === 'ship'
+            ? alreadyPlacedCellCountWest + 1
+            : alreadyPlacedCellCountWest
       }
-      if (x - i < 10) {
+      if (x + i < 10) {
         alreadyPlacedCellCountEast =
-          grid[x + i][y].type === 'ship' ? alreadyPlacedCellCountEast + 1 : 0
+          grid[x + i][y].type === 'ship'
+            ? alreadyPlacedCellCountEast + 1
+            : alreadyPlacedCellCountEast
       }
     }
-    console.log(alreadyPlacedCellCountEast)
-    // if (y<shipLength-alreadyPlacedCellCount) {return false}
+    console.log(`alreadyPlacedCellCountNorth ${alreadyPlacedCellCountNorth}`)
+    console.log(`alreadyPlacedCellCountSouth ${alreadyPlacedCellCountSouth}`)
+    console.log(`alreadyPlacedCellCountWest ${alreadyPlacedCellCountWest}`)
+    console.log(`alreadyPlacedCellCountEast ${alreadyPlacedCellCountEast}`)
+    if (
+      y < shipLength - alreadyPlacedCellCountNorth &&
+      y < shipLength - alreadyPlacedCellCountSouth &&
+      x < shipLength - alreadyPlacedCellCountWest &&
+      x < shipLength - alreadyPlacedCellCountEast
+    ) {
+      return false
+    }
     // for(let i = 1;  i < shipLength-alreadyPlacedCellCount ; i+=1) {
     //   if (grid[x][y-i].type === 'sea') {
     //     [
