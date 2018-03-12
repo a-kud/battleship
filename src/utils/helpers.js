@@ -89,3 +89,81 @@ export function isValidPlacement (grid, x, y, shipLength = 4) {
   }
   return false
 }
+
+export function isCellClearOfShips (grid, i, j) {
+  let rowLimit = 9
+  let columnLimit = 9
+  let types = []
+  for (let x = Math.max(0, i - 1); x <= Math.min(i + 1, rowLimit); x++) {
+    for (let y = Math.max(0, j - 1); y <= Math.min(j + 1, columnLimit); y++) {
+      if (x !== i || y !== j) {
+        types.push(grid[x][y].type)
+      }
+    }
+  }
+  return !types.includes('ship')
+}
+
+/**
+ *
+ * @param {array} grid 2D game grid
+ * @param {array} validLineCoordinates Contains arrays of arrays of coordinates composing of a line ship
+ */
+export function getElValidCoordinates (grid, validLineCoordinates) {
+  function findNorthAndSouthCoordinates (x, y) {
+    const cordinatesFound = []
+    const checkSouth = () => {
+      if (
+        gridCopy[x][y + 1].type !== 'ship' &&
+        isCellClearOfShips(gridCopy, x, y + 1)
+      ) {
+        cordinatesFound.push([x, y + 1])
+      }
+    }
+    const checkNorth = () => {
+      if (
+        gridCopy[x][y - 1].type !== 'ship' &&
+        isCellClearOfShips(gridCopy, x, y - 1)
+      ) {
+        cordinatesFound.push([x, y - 1])
+      }
+    }
+    if (y - 1 < 0) {
+      // check south only
+      checkSouth()
+    }
+    if (y + 1 === lengthLimit) {
+      // check north only
+      checkNorth()
+    } else {
+      checkNorth()
+      checkSouth()
+    }
+    return cordinatesFound
+  }
+
+  const lengthLimit = [...grid[0]].length
+  const gridCopy = grid.map(row => row.map(col => [...col]))
+  const validLineCoordinatesCopy = validLineCoordinates.map(row =>
+    row.map(col => [...col])
+  )
+  const shipLength = [...validLineCoordinates[0]].length
+  const markShipsLayout = validLineCoordinatesCopy.map(coordinates =>
+    coordinates.filter((coord, i) => {
+      if (i === 0) {
+        return coordinates[i + 1][0] === coordinates[i][0]
+          ? [coordinates[i].push('vertical')]
+          : [coordinates[i].push('horizontal')]
+      } else {
+        return coordinates[i]
+      }
+    })
+  )
+
+  console.log(markShipsLayout)
+  for (const shipCoord of markShipsLayout) {
+    if (markShipsLayout[0][2] === 'horizontal') {
+      console.log(shipCoord)
+    }
+  }
+}
