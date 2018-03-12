@@ -20,7 +20,7 @@ class Grid extends Component {
       const seaRow = row.map((cell, y) => (
         <Cell
           onClick={this.handleClick}
-          coord={{ x: sea[y][x].x, y: sea[y][x].y }}
+          coord={{ x: sea[x][y].x, y: sea[x][y].y }}
           type={label === 'Self' ? sea[x][y].type : sea[x][y].type}
           label={label}
           key={generateQuickGuid()}
