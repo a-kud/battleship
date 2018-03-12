@@ -52,7 +52,7 @@ class App extends Component {
     const generateAiBoard = grid => {
       const lengthLimit = this.state.settings.boardWidth
       const generateCoordinate = limit => Math.floor(Math.random() * limit)
-      const findNeighbors = (myArray, i, j) => {
+      const isCellClearOfShips = (myArray, i, j) => {
         let rowLimit = 9
         let columnLimit = 9
         let types = []
@@ -73,94 +73,122 @@ class App extends Component {
         // let gridCopy = [...grid]
         const x = generateCoordinate(lengthLimit - 1)
         const y = generateCoordinate(lengthLimit - 1)
-        if (gridCopy[x][y].type === 'sea' && findNeighbors(gridCopy, x, y)) {
+        if (
+          gridCopy[x][y].type === 'sea' &&
+          isCellClearOfShips(gridCopy, x, y)
+        ) {
           gridCopy[x][y].type = 'ship'
+        } else {
+          generateDestroyer()
         }
       }
-      const generateCruiser = () => {
-        const x = generateCoordinate(lengthLimit - 1)
-        const y = generateCoordinate(lengthLimit - 1)
-        const validCoordinates = []
-        // const gridCopy = [...grid]
 
-        if (lengthLimit - y >= 4) {
+      /**
+       * @param {number} length Ship length
+       * @param {number} x Column coordinate
+       * @param {number} y Row coordinate
+       * @returns {array} Coordinates ship of length size can be placed clear of
+       * obstacles
+       */
+      const generateLinearShipCoordinates = (x, y, length) => {
+        const validCoordinates = []
+        if (lengthLimit - y >= length) {
           const southCoordinates = []
-          for (let i = 0; i < 4; i += 1) {
+          for (let i = 0; i < length; i += 1) {
             if (
               gridCopy[x][y + i].type !== 'ship' &&
-              findNeighbors(gridCopy, x, y)
+              isCellClearOfShips(gridCopy, x, y)
             ) {
               southCoordinates.push([x, y + i])
             }
           }
-          if (southCoordinates.length === 4) {
+          if (southCoordinates.length === length) {
             validCoordinates.push(southCoordinates)
           }
         }
-        if (y + 1 >= 4) {
+        if (y + 1 >= length) {
           let northCoordinates = []
-          for (let i = 0; i < 4; i++) {
+          for (let i = 0; i < length; i++) {
             if (
               gridCopy[x][y - i].type !== 'ship' &&
-              findNeighbors(gridCopy, x, y)
+              isCellClearOfShips(gridCopy, x, y)
             ) {
               northCoordinates.push([x, y - i])
             }
           }
-          if (northCoordinates.length === 4 && findNeighbors(gridCopy, x, y)) {
+          if (northCoordinates.length === length) {
             validCoordinates.push(northCoordinates)
           }
         }
-        if (lengthLimit - x >= 4) {
+        if (lengthLimit - x >= length) {
           const westCoordinates = []
-          for (let i = 0; i < 4; i += 1) {
+          for (let i = 0; i < length; i += 1) {
             if (
               gridCopy[x + i][y].type !== 'ship' &&
-              findNeighbors(gridCopy, x, y)
+              isCellClearOfShips(gridCopy, x, y)
             ) {
               westCoordinates.push([x + i, y])
             }
           }
-          if (westCoordinates.length === 4) {
+          if (westCoordinates.length === length) {
             validCoordinates.push(westCoordinates)
           }
         }
-        if (x + 1 >= 4) {
+        if (x + 1 >= length) {
           const eastCoordinates = []
-          for (let i = 0; i < 4; i += 1) {
-            if (gridCopy[x - i][y].type !== 'ship') {
+          for (let i = 0; i < length; i += 1) {
+            if (
+              gridCopy[x - i][y].type !== 'ship' &&
+              isCellClearOfShips(gridCopy, x, y)
+            ) {
               eastCoordinates.push([x - i, y])
             }
           }
-          if (eastCoordinates.length === 4) {
+          if (eastCoordinates.length === length) {
             validCoordinates.push(eastCoordinates)
           }
         }
+        console.log(validCoordinates)
+        return validCoordinates
+      }
+
+      const generateCruiser = () => {
+        const x = generateCoordinate(lengthLimit - 1)
+        const y = generateCoordinate(lengthLimit - 1)
+        const validCoordinates = generateLinearShipCoordinates(x, y, 4)
         if (validCoordinates.length > 0) {
           const finalCoordinates =
             validCoordinates[generateCoordinate(validCoordinates.length - 1)]
           for (const coordinate of finalCoordinates) {
             gridCopy[coordinate[0]][coordinate[1]].type = 'ship'
           }
+        } else {
+          generateCruiser()
+        }
+      }
+
+      const generateBattleShip = () => {
+        const x = generateCoordinate(lengthLimit - 1)
+        const y = generateCoordinate(lengthLimit - 1)
+        const validCoordinates = generateLinearShipCoordinates(x, y, 3)
+        if (validCoordinates.length > 0) {
+          const finalCoordinates =
+            validCoordinates[generateCoordinate(validCoordinates.length - 1)]
+          for (const coordinate of finalCoordinates) {
+            gridCopy[coordinate[0]][coordinate[1]].type = 'ship'
+          }
+        } else {
+          generateBattleShip()
         }
       }
 
       let gridCopy = [...grid]
+      // const gridCopy = grid.map(row => row.map(cell => ({...cell})))
 
-      // while (true) {
-      //   generateDestroyer()
-      //   generateDestroyer()
-      //   const cruiser = generateCruiser()
-      //   if(cruiser) {
-      //     console.log(cruiser)
-      //     break
-      //   }
-      //   // console.log(cruiser)
-      //   // break
-      // }
       generateDestroyer()
       generateDestroyer()
       generateCruiser()
+      generateBattleShip()
       return gridCopy
     }
     const currentStep = this.state.userSetup.step
@@ -168,20 +196,8 @@ class App extends Component {
       userSetup: { ...this.state.userSetup, step: currentStep + 1 },
       gameStarted: true
     })
-    console.log(generateAiBoard([...this.state.aiBoard]))
-    // if (this.isValidPlacement(
-    //   this.state.aiBoard,
-    //   Math.floor(Math.random() * 9),
-    //   Math.floor(Math.random() * 9), 1)
-    // ) {
-    // setShipCoordinates('destroyer1Coordinates', 1, false)
-    // }
-    // if (this.isValidPlacement(
-    //   this.state.aiBoard,
-    //   Math.floor(Math.random() * 9),
-    //   Math.floor(Math.random() * 9), 1)
-    // ) {
-    // setShipCoordinates('destroyer2Coordinates', 1, false)
+
+    generateAiBoard(this.state.aiBoard)
   }
 
   isValidPlacement = (
@@ -253,11 +269,10 @@ class App extends Component {
               : alreadyPlacedCellCountEast
         }
       }
-      console.log(`alreadyPlacedCellCountNorth ${alreadyPlacedCellCountNorth}`)
-      console.log(`alreadyPlacedCellCountSouth ${alreadyPlacedCellCountSouth}`)
-      console.log(`alreadyPlacedCellCountWest ${alreadyPlacedCellCountWest}`)
-      console.log(`alreadyPlacedCellCountEast ${alreadyPlacedCellCountEast}`)
 
+      // const validCoord = generateLinearShipCoordinates(x,y, 4, 9, [...grid])
+      // console.log(validCoord)
+      // console.log(this.state.userSetup[shipCoordinates].length)
       if (
         [
           alreadyPlacedCellCountNorth,
@@ -297,12 +312,12 @@ class App extends Component {
           userBoardCopy[x][y].type = 'ship shiplastcell'
         }
 
-        if (!userBoard) {
-          console.log(userBoardCopy)
-          return {
-            aiBoard: userBoardCopy
-          }
-        }
+        // if (!userBoard) {
+        //   console.log(userBoardCopy)
+        //   return {
+        //     aiBoard: userBoardCopy
+        //   }
+        // }
         return {
           userSetup: {
             ...prevState.userSetup,
@@ -380,18 +395,22 @@ class App extends Component {
   render () {
     return (
       <div id='app'>
-        <Button
-          variant='raised'
-          onClick={this.handleGameStart}
-          color='primary'
-          disabled={this.state.gameStarted}
-        >
-          Start
-        </Button>
-        <div>
-          <h2>Game status:</h2>
-          <p>{this.state.userSetup.text[this.state.userSetup.step]}</p>
+        <div className='controls'>
+          <Button
+            variant='raised'
+            onClick={this.handleGameStart}
+            color='primary'
+            disabled={this.state.gameStarted}
+            id='start-btn'
+          >
+            Start
+          </Button>
+          <div className='game-status'>
+            <h2>Game status:</h2>
+            <p>{this.state.userSetup.text[this.state.userSetup.step]}</p>
+          </div>
         </div>
+
         <Board
           board={this.state.userBoard}
           label={'Self'}

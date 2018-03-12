@@ -21,13 +21,13 @@ class Grid extends Component {
         <Cell
           onClick={this.handleClick}
           coord={{ x: sea[y][x].x, y: sea[y][x].y }}
-          type={label === 'Self' ? sea[x][y].type : 'sea'}
+          type={label === 'Self' ? sea[x][y].type : sea[x][y].type}
           label={label}
           key={generateQuickGuid()}
         />
       ))
       return (
-        <div className='row' key={generateQuickGuid()}>
+        <div className='column' key={generateQuickGuid()}>
           {seaRow}
         </div>
       )

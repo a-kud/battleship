@@ -2,6 +2,10 @@
   display: flex;
 }
 
+#app {
+  width: 40vw
+}
+
 .row-label, .column-label {
   justify-content: center;
   align-items: center;
