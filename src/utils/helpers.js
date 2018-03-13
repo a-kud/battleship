@@ -97,7 +97,7 @@ export function isCellClearOfShips (grid, i, j) {
   for (let x = Math.max(0, i - 1); x <= Math.min(i + 1, rowLimit); x++) {
     for (let y = Math.max(0, j - 1); y <= Math.min(j + 1, columnLimit); y++) {
       if (x !== i || y !== j) {
-        types.push(grid[x][y].type)
+        types.push(grid[x][y].type)//TODO return true or false instead of push
       }
     }
   }

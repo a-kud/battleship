@@ -80,7 +80,7 @@ class App extends Component {
           gridCopy[x][y].type = 'ship'
           return gridCopy
         } else {
-          generateDestroyer(gridCopy)
+          return generateDestroyer(gridCopy)
         }
         // return gridCopy
       }
@@ -96,7 +96,6 @@ class App extends Component {
         x,
         y,
         length,
-        gridCopy,
         elShapeRequested = false
       ) => {
         const validCoordinates = []
@@ -119,8 +118,8 @@ class App extends Component {
             validCoordinates.push(southCoordinates)
           }
         }
-
-        if (y - length >= -1) {
+        
+        if (lengthLimit - (lengthLimit - 1 - y) >= length) {
           let northCoordinates = []
           for (let i = 0; i < length; i++) {
             if (
@@ -135,7 +134,7 @@ class App extends Component {
           }
         }
 
-        if (x - length >= -1) {
+        if (/*x - length >= -1*/lengthLimit - (lengthLimit - 1 - x) >= length) {
           const westCoordinates = []
           for (let i = 0; i < length; i += 1) {
             if (
@@ -164,6 +163,8 @@ class App extends Component {
             validCoordinates.push(eastCoordinates)
           }
         }
+
+        console.log(validCoordinates)
         return validCoordinates
       }
 
@@ -174,9 +175,8 @@ class App extends Component {
         const validCoordinates = generateLinearShipCoordinates(
           x,
           y,
-          4,
-          grid.map(row => row.map(cell => ({ ...cell })))
-        )
+          4)
+        
         if (validCoordinates.length > 0) {
           const finalCoordinates =
             validCoordinates[generateCoordinate(validCoordinates.length - 1)]
@@ -198,26 +198,25 @@ class App extends Component {
         const validCoordinates = generateLinearShipCoordinates(
           x,
           y,
-          3,
-          grid.map(row => row.map(cell => ({ ...cell })))
-        )
+          3)
+        
         // const finalValidCoordinates = getElValidCoordinates(
         //   gridCopy,
         //   validCoordinates
         // )
         // getElValidCoordinates(gridCopy, validCoordinates)
 
-        if (validCoordinates.length > 0) {
+        if (validCoordinates.length) {
           const finalCoordinates =
             validCoordinates[generateCoordinate(validCoordinates.length - 1)]
           for (const coordinate of finalCoordinates) {
             gridCopy[coordinate[0]][coordinate[1]].type = 'ship'
           }
           return gridCopy
-        } else {
+        } 
           console.log('gonna run generateBattleShip(gridCopy)')
           return generateBattleShip(gridCopy)
-        }
+        
       }
 
       // let gridCopy = [...grid]
