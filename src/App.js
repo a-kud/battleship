@@ -247,7 +247,12 @@ class App extends Component {
       if (!findNeighbors(grid, x, y)) {
         return false
       }
-      for (let i = 1; i < shipLength; i += 1) {
+      console.log('x', x, 'y', y)
+      for (
+        let i = 1;
+        i <= this.state.userSetup[shipCoordinates].length;
+        i += 1
+      ) {
         if (y - i >= 0) {
           alreadyPlacedCellCountNorth =
             grid[x][y - i].type === 'ship'

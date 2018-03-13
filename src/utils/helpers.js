@@ -163,6 +163,7 @@ export function getElValidCoordinates (grid, validLineCoordinates) {
         if (coord[0] + 1 === lengthLimit) {
           allShipCoordinates.push([checkWest(coord[0], coord[1]), ...shipCoord])
         }
+        console.log('error', coord[0], coord[1])
         allShipCoordinates.push([checkWest(coord[0], coord[1]), ...shipCoord])
         allShipCoordinates.push([checkEast(coord[0], coord[1]), ...shipCoord])
       }
