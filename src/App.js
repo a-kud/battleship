@@ -57,21 +57,12 @@ class App extends Component {
         // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
-        // console.log('grid in generateDestroyer', grid)
-        
-        if (
-          // gridCopy[x][y].type === 'sea' &&
-          // isCellClearOfShips(gridCopy, x, y)
-          grid[x][y].type === 'sea' &&
-          isCellClearOfShips(grid, x, y)
-        ) {
+
+        if (grid[x][y].type === 'sea' && isCellClearOfShips(grid, x, y)) {
           grid[x][y].type = 'ship'
           return grid
-        } 
-        
+        }
         return generateDestroyer(grid)
-        
-        // return gridCopy
       }
 
       /**
@@ -88,7 +79,6 @@ class App extends Component {
         elShapeRequested = false
       ) => {
         const validCoordinates = []
-        // console.log(x, y)
         if (lengthLimit - y >= length) {
           const southCoordinates = []
           for (let i = 0; i < length; i += 1) {
@@ -103,7 +93,7 @@ class App extends Component {
             validCoordinates.push(southCoordinates)
           }
         }
-        
+
         if (lengthLimit - (lengthLimit - 1 - y) >= length) {
           let northCoordinates = []
           for (let i = 0; i < length; i++) {
@@ -119,7 +109,7 @@ class App extends Component {
           }
         }
 
-        if (/*x - length >= -1*/lengthLimit - (lengthLimit - 1 - x) >= length) {
+        if (lengthLimit - (lengthLimit - 1 - x) >= length) {
           const westCoordinates = []
           for (let i = 0; i < length; i += 1) {
             if (
@@ -155,11 +145,8 @@ class App extends Component {
         // const grid = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
-        const validCoordinates = generateLinearShipCoordinates(
-          x,
-          y,
-          4)
-        
+        const validCoordinates = generateLinearShipCoordinates(x, y, 4)
+
         if (validCoordinates.length > 0) {
           const finalCoordinates =
             validCoordinates[generateRandomInteger(validCoordinates.length - 1)]
@@ -167,60 +154,36 @@ class App extends Component {
             grid[coordinate[0]][coordinate[1]].type = 'ship'
           }
           return grid
-        } 
-          return generateCruiser(grid)
-        
+        }
+        return generateCruiser(grid)
       }
 
       const generateBattleShip = grid => {
         // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
-        const validCoordinates = generateLinearShipCoordinates(
-          x,
-          y,
-          3)
-        
-        let finalValidCoordinates = []
-        // console.log(getElValidCoordinates(
-        //   grid,
-        //   validCoordinates 
-        // ))
-        if(validCoordinates.length) {
-          finalValidCoordinates = getElValidCoordinates(
-            grid,
-            validCoordinates 
-          )
-          console.log("finalValidCoordinates",finalValidCoordinates)
-        }
+        const validCoordinates = generateLinearShipCoordinates(x, y, 3)
 
+        let finalValidCoordinates = []
+        if (validCoordinates.length) {
+          finalValidCoordinates = getElValidCoordinates(grid, validCoordinates)
+        }
         if (finalValidCoordinates.length) {
           const finalCoordinates =
-            finalValidCoordinates[generateRandomInteger(finalValidCoordinates.length - 1)]
+            finalValidCoordinates[
+              generateRandomInteger(finalValidCoordinates.length - 1)
+            ]
           for (const coordinate of finalCoordinates) {
             grid[coordinate[0]][coordinate[1]].type = 'ship'
           }
           return grid
-        } 
-          console.log('gonna run generateBattleShip(grid)')
-          return generateBattleShip(grid)
-        
+        }
+        return generateBattleShip(grid)
       }
 
-      // let gridCopy = [...grid]
-      // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
-
-      // const a = generateDestroyer(grid)
-      // const b = generateDestroyer(a)
-      // const c = generateCruiser(b)
-      // const d = generateBattleShip(c)
-      // console.log('a', a)
-      // console.log('b',b)
-      // console.log('c',c)
-      // console.log('d',d)
-      // return  generateBattleShip(generateCruiser(generateDestroyer(generateDestroyer(gridCopy))))
-
-      return generateDestroyer(generateDestroyer(generateCruiser(generateBattleShip(grid))))
+      return generateCruiser(
+        generateCruiser(generateDestroyer(generateBattleShip(grid)))
+      )
     }
     const currentStep = this.state.userSetup.step
     this.setState({
@@ -228,9 +191,10 @@ class App extends Component {
       gameStarted: true
     })
 
-    const gridCopy = this.state.aiBoard.map(row => row.map(cell => ({ ...cell })))
-    // console.log(gridCopy)
-    const aiGrid = generateAiBoard(/*this.state.aiBoard*/gridCopy)
+    // const gridCopy = this.state.aiBoard.map(row =>
+    //   row.map(cell => ({ ...cell }))
+    // )
+    const aiGrid = generateAiBoard(this.state.aiBoard)
     this.setState({ aiBoard: aiGrid })
   }
 
@@ -265,13 +229,19 @@ class App extends Component {
     let alreadyPlacedCellCountWest = 0
     let alreadyPlacedCellCountEast = 0
 
-    if (grid[x][y].type === 'sea' && shipLength === 1) {
+    if (
+      grid[x][y].type === 'sea' &&
+      (shipLength === 1 || this.state.userSetup[shipCoordinates].length === 0)
+    ) {
       return findNeighbors(grid, x, y)
     }
 
-    if (this.state.userSetup[shipCoordinates].length === 0) {
-      return findNeighbors(grid, x, y)
-    }
+    // if (
+    //   this.state.userSetup[shipCoordinates].length === 0 ||
+    //   this.state.userSetup[shipCoordinates].length === 1
+    // ) {
+    //   return findNeighbors(grid, x, y)
+    // }
 
     if (grid[x][y].type === 'sea' && shipLength > 1) {
       if (!findNeighbors(grid, x, y)) {
@@ -306,7 +276,10 @@ class App extends Component {
 
       // const validCoord = generateLinearShipCoordinates(x,y, 4, 9, [...grid])
       // console.log(validCoord)
-      // console.log(this.state.userSetup[shipCoordinates].length)
+      console.log('alreadyPlacedCellCountNorth', alreadyPlacedCellCountNorth)
+      console.log('alreadyPlacedCellCountSouth', alreadyPlacedCellCountSouth)
+      console.log('alreadyPlacedCellCountWest', alreadyPlacedCellCountWest)
+      console.log('alreadyPlacedCellCountEast', alreadyPlacedCellCountEast)
       if (
         [
           alreadyPlacedCellCountNorth,
