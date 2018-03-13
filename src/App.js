@@ -3,7 +3,6 @@ import './App.css'
 
 import { Board } from './components/Board'
 import Button from 'material-ui/Button'
-// import { isValidPlacement } from './utils/helpers'
 import { isCellClearOfShips, getElValidCoordinates } from './utils/helpers'
 class App extends Component {
   state = {
@@ -19,10 +18,10 @@ class App extends Component {
       step: 0,
       text: [
         'Please start game',
-        'Place first destroyer. It takes one cell.',
-        'Place second destroyer. One cell.',
+        'Place a battleship. Four cells. L-shaped.',
         'Place a cruiser. Four cell length.',
-        'Place a battleship. Four cells. L-shaped.'
+        'Place first destroyer. It takes one cell.',
+        'Place second destroyer. One cell.'
       ],
       destroyer1Coordinates: [],
       destroyer2Coordinates: [],
@@ -221,7 +220,7 @@ class App extends Component {
           }
         }
       }
-      return !types.includes('ship shiplastcell')
+      return !types.includes('ship ship-userset')
     }
 
     let alreadyPlacedCellCountNorth = 0
@@ -240,14 +239,16 @@ class App extends Component {
       elShapeRequested &&
       this.state.userSetup[shipCoordinates].length === 3
     ) {
-      console.log('last cell')
+      const cellCountWithShipType = isCellClearOfShips(grid, x, y, true).filter(
+        x => x === 'ship'
+      ).length
+      return grid[x][y].type === 'sea' && cellCountWithShipType === 2
     }
 
     if (grid[x][y].type === 'sea' && shipLength > 1) {
       if (!findNeighbors(grid, x, y)) {
         return false
       }
-      console.log('x', x, 'y', y)
       for (
         let i = 1;
         i <= this.state.userSetup[shipCoordinates].length;
@@ -278,13 +279,6 @@ class App extends Component {
               : alreadyPlacedCellCountEast
         }
       }
-
-      // const validCoord = generateLinearShipCoordinates(x,y, 4, 9, [...grid])
-      // console.log(validCoord)
-      console.log('alreadyPlacedCellCountNorth', alreadyPlacedCellCountNorth)
-      console.log('alreadyPlacedCellCountSouth', alreadyPlacedCellCountSouth)
-      console.log('alreadyPlacedCellCountWest', alreadyPlacedCellCountWest)
-      console.log('alreadyPlacedCellCountEast', alreadyPlacedCellCountEast)
       if (
         [
           alreadyPlacedCellCountNorth,
@@ -310,11 +304,17 @@ class App extends Component {
       this.setState(prevState => {
         const userBoardCopy = [...prevState.userBoard]
 
+        console.log(isCoordinatesNotReady)
+
         if (!isCoordinatesNotReady) {
-          userBoardCopy[x][y].type = 'ship shiplastcell'
+          userBoardCopy[x][y].type = 'ship ship-userset'
+          for (const coordinates of board[shipClass]) {
+            userBoardCopy[coordinates[0]][coordinates[1]].type =
+              'ship ship-userset'
+          }
         }
-        
-        if ((currentStep === 3 || currentStep === 4) && isCoordinatesNotReady) {
+
+        if ((currentStep === 1 || currentStep === 2) && isCoordinatesNotReady) {
           return {
             userSetup: {
               ...prevState.userSetup,
@@ -322,14 +322,16 @@ class App extends Component {
             }
           }
         }
-        
 
-        // if (!userBoard) {
-        //   console.log(userBoardCopy)
-        //   return {
-        //     aiBoard: userBoardCopy
-        //   }
-        // }
+        if (currentStep === 4 && !isCoordinatesNotReady) {
+          this.setState(prevState => ({
+            userSetup: {
+              ...prevState.userSetup,
+              isComplete: !prevState.userSetup.isComplete
+            }
+          }))
+        }
+
         return {
           userSetup: {
             ...prevState.userSetup,
@@ -349,43 +351,6 @@ class App extends Component {
 
     switch (this.state.userSetup.step) {
       case 1: {
-        if (this.isValidPlacement(this.state.userBoard, x, y, 1)) {
-          updateBoard()
-          setShipCoordinates('destroyer1Coordinates')
-        } else {
-          alert('invalid coordinates')
-        }
-
-        break
-      }
-      case 2: {
-        if (this.isValidPlacement(this.state.userBoard, x, y, 1)) {
-          setShipCoordinates('destroyer2Coordinates')
-          updateBoard()
-        } else {
-          alert('invalid coordinates')
-        }
-
-        break
-      }
-      case 3: {
-        if (
-          this.isValidPlacement(
-            this.state.userBoard,
-            x,
-            y,
-            4,
-            'cruiserCoordinates'
-          )
-        ) {
-          setShipCoordinates('cruiserCoordinates', 4)
-          updateBoard()
-        } else {
-          alert('invalid coordinates')
-        }
-        break
-      }
-      case 4: {
         if (
           this.isValidPlacement(
             this.state.userBoard,
@@ -403,6 +368,45 @@ class App extends Component {
         }
         break
       }
+      case 2: {
+        if (
+          this.isValidPlacement(
+            this.state.userBoard,
+            x,
+            y,
+            4,
+            'cruiserCoordinates'
+          )
+        ) {
+          setShipCoordinates('cruiserCoordinates', 4)
+          updateBoard()
+        } else {
+          alert('invalid coordinates')
+        }
+        break
+      }
+      case 3: {
+        if (this.isValidPlacement(this.state.userBoard, x, y, 1)) {
+          setShipCoordinates('destroyer2Coordinates')
+          updateBoard()
+        } else {
+          alert('invalid coordinates')
+        }
+        break
+      }
+      case 4: {
+        if (this.isValidPlacement(this.state.userBoard, x, y, 1)) {
+          updateBoard()
+          setShipCoordinates('destroyer1Coordinates')
+        } else {
+          alert('invalid coordinates')
+        }
+        break
+      }
+      case 5: {
+        alert('fire')
+        break
+      }
       default:
         break
     }
@@ -418,6 +422,7 @@ class App extends Component {
   }
 
   render () {
+    const setupComplete = this.state.userSetup.isComplete
     return (
       <div id='app'>
         <div className='controls'>
@@ -432,7 +437,11 @@ class App extends Component {
           </Button>
           <div className='game-status'>
             <h2>Game status:</h2>
-            <p>{this.state.userSetup.text[this.state.userSetup.step]}</p>
+            <p>
+              {setupComplete
+                ? 'TODO fire shots text'
+                : this.state.userSetup.text[this.state.userSetup.step]}
+            </p>
           </div>
         </div>
 
