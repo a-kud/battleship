@@ -148,24 +148,28 @@ export function getElValidCoordinates (grid, validLineCoordinates) {
             ...shipCoord
           ])
         }
-        if (coord[1] + 1 === lengthLimit) {
+        else if (coord[1] + 1 === lengthLimit) {
           allShipCoordinates.push([
             checkNorth(coord[0], coord[1]),
             ...shipCoord
           ])
+        } else {
+          allShipCoordinates.push([checkNorth(coord[0], coord[1]), ...shipCoord])
+          allShipCoordinates.push([checkSouth(coord[0], coord[1]), ...shipCoord])
         }
-        allShipCoordinates.push([checkNorth(coord[0], coord[1]), ...shipCoord])
-        allShipCoordinates.push([checkSouth(coord[0], coord[1]), ...shipCoord])
+        
       } else if (coord[2] === 'vertical') {
         if (coord[0] === 0) {
           allShipCoordinates.push([checkEast(coord[0], coord[1]), ...shipCoord])
         }
-        if (coord[0] + 1 === lengthLimit) {
+        else if (coord[0] + 1 === lengthLimit) {
           allShipCoordinates.push([checkWest(coord[0], coord[1]), ...shipCoord])
+        } else {
+          console.log('error', coord[0], coord[1])
+          allShipCoordinates.push([checkWest(coord[0], coord[1]), ...shipCoord])
+          allShipCoordinates.push([checkEast(coord[0], coord[1]), ...shipCoord])
         }
-        console.log('error', coord[0], coord[1])
-        allShipCoordinates.push([checkWest(coord[0], coord[1]), ...shipCoord])
-        allShipCoordinates.push([checkEast(coord[0], coord[1]), ...shipCoord])
+        
       }
     }
 

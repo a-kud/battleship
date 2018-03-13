@@ -236,12 +236,12 @@ class App extends Component {
       return findNeighbors(grid, x, y)
     }
 
-    // if (
-    //   this.state.userSetup[shipCoordinates].length === 0 ||
-    //   this.state.userSetup[shipCoordinates].length === 1
-    // ) {
-    //   return findNeighbors(grid, x, y)
-    // }
+    if (
+      elShapeRequested &&
+      this.state.userSetup[shipCoordinates].length === 3
+    ) {
+      console.log('last cell')
+    }
 
     if (grid[x][y].type === 'sea' && shipLength > 1) {
       if (!findNeighbors(grid, x, y)) {
@@ -302,16 +302,18 @@ class App extends Component {
   }
 
   handleClick = (x, y) => {
-    const setShipCoordinates = (shipClass, length = 1, userBoard = true) => {
+    const setShipCoordinates = (shipClass, length = 1) => {
       const board = this.state.userSetup
       const currentStep = board.step
       const isCoordinatesNotReady = board[shipClass].length < length - 1
 
       this.setState(prevState => {
-        const userBoardCopy = userBoard
-          ? [...prevState.userBoard]
-          : [...prevState.aiBoard]
+        const userBoardCopy = [...prevState.userBoard]
 
+        if (!isCoordinatesNotReady) {
+          userBoardCopy[x][y].type = 'ship shiplastcell'
+        }
+        
         if ((currentStep === 3 || currentStep === 4) && isCoordinatesNotReady) {
           return {
             userSetup: {
@@ -320,9 +322,7 @@ class App extends Component {
             }
           }
         }
-        if (!isCoordinatesNotReady) {
-          userBoardCopy[x][y].type = 'ship shiplastcell'
-        }
+        
 
         // if (!userBoard) {
         //   console.log(userBoardCopy)
@@ -386,8 +386,21 @@ class App extends Component {
         break
       }
       case 4: {
-        setShipCoordinates('battleshipCoordinates', 4)
-        updateBoard()
+        if (
+          this.isValidPlacement(
+            this.state.userBoard,
+            x,
+            y,
+            4,
+            'battleshipCoordinates',
+            true
+          )
+        ) {
+          setShipCoordinates('battleshipCoordinates', 4)
+          updateBoard()
+        } else {
+          alert('invalid coordinates')
+        }
         break
       }
       default:
