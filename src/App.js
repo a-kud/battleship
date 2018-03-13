@@ -51,37 +51,26 @@ class App extends Component {
   handleGameStart = () => {
     const generateAiBoard = grid => {
       const lengthLimit = this.state.settings.boardWidth
-      const generateCoordinate = limit => Math.floor(Math.random() * limit)
-      // const isCellClearOfShips = (grid, i, j) => {
-      //   let rowLimit = 9
-      //   let columnLimit = 9
-      //   let types = []
-      //   for (let x = Math.max(0, i - 1); x <= Math.min(i + 1, rowLimit); x++) {
-      //     for (
-      //       let y = Math.max(0, j - 1);
-      //       y <= Math.min(j + 1, columnLimit);
-      //       y++
-      //     ) {
-      //       if (x !== i || y !== j) {
-      //         types.push(grid[x][y].type)
-      //       }
-      //     }
-      //   }
-      //   return !types.includes('ship')
-      // }
+      const generateRandomInteger = limit => Math.floor(Math.random() * limit)
+
       const generateDestroyer = grid => {
-        const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
-        const x = generateCoordinate(lengthLimit - 1)
-        const y = generateCoordinate(lengthLimit - 1)
+        // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
+        const x = generateRandomInteger(lengthLimit - 1)
+        const y = generateRandomInteger(lengthLimit - 1)
+        // console.log('grid in generateDestroyer', grid)
+        
         if (
-          gridCopy[x][y].type === 'sea' &&
-          isCellClearOfShips(gridCopy, x, y)
+          // gridCopy[x][y].type === 'sea' &&
+          // isCellClearOfShips(gridCopy, x, y)
+          grid[x][y].type === 'sea' &&
+          isCellClearOfShips(grid, x, y)
         ) {
-          gridCopy[x][y].type = 'ship'
-          return gridCopy
-        } else {
-          return generateDestroyer(gridCopy)
-        }
+          grid[x][y].type = 'ship'
+          return grid
+        } 
+        
+        return generateDestroyer(grid)
+        
         // return gridCopy
       }
 
@@ -99,17 +88,13 @@ class App extends Component {
         elShapeRequested = false
       ) => {
         const validCoordinates = []
-        console.log(x, y)
+        // console.log(x, y)
         if (lengthLimit - y >= length) {
           const southCoordinates = []
           for (let i = 0; i < length; i += 1) {
-            // console.log(
-            //   `gridCopy[x][y + i].type !== 'ship' ${gridCopy[x][y + i].type !==
-            //     'ship'}\nisCellClearOfShips(gridCopy, x, y + i)${isCellClearOfShips(gridCopy, x, y + i)}\nx${x} y${y + i}`
-            // )
             if (
-              gridCopy[x][y + i].type !== 'ship' &&
-              isCellClearOfShips(gridCopy, x, y + i)
+              grid[x][y + i].type !== 'ship' &&
+              isCellClearOfShips(grid, x, y + i)
             ) {
               southCoordinates.push([x, y + i])
             }
@@ -123,8 +108,8 @@ class App extends Component {
           let northCoordinates = []
           for (let i = 0; i < length; i++) {
             if (
-              gridCopy[x][y - i].type !== 'ship' &&
-              isCellClearOfShips(gridCopy, x, y)
+              grid[x][y - i].type !== 'ship' &&
+              isCellClearOfShips(grid, x, y - i)
             ) {
               northCoordinates.push([x, y - i])
             }
@@ -138,8 +123,8 @@ class App extends Component {
           const westCoordinates = []
           for (let i = 0; i < length; i += 1) {
             if (
-              gridCopy[x - i][y].type !== 'ship' &&
-              isCellClearOfShips(gridCopy, x, y)
+              grid[x - i][y].type !== 'ship' &&
+              isCellClearOfShips(grid, x - i, y)
             ) {
               westCoordinates.push([x - i, y])
             }
@@ -153,8 +138,8 @@ class App extends Component {
           const eastCoordinates = []
           for (let i = 0; i < length; i += 1) {
             if (
-              gridCopy[x + i][y].type !== 'ship' &&
-              isCellClearOfShips(gridCopy, x, y)
+              grid[x + i][y].type !== 'ship' &&
+              isCellClearOfShips(grid, x + i, y)
             ) {
               eastCoordinates.push([x + i, y])
             }
@@ -163,15 +148,13 @@ class App extends Component {
             validCoordinates.push(eastCoordinates)
           }
         }
-
-        console.log(validCoordinates)
         return validCoordinates
       }
 
       const generateCruiser = grid => {
-        const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
-        const x = generateCoordinate(lengthLimit - 1)
-        const y = generateCoordinate(lengthLimit - 1)
+        // const grid = grid.map(row => row.map(cell => ({ ...cell })))
+        const x = generateRandomInteger(lengthLimit - 1)
+        const y = generateRandomInteger(lengthLimit - 1)
         const validCoordinates = generateLinearShipCoordinates(
           x,
           y,
@@ -179,57 +162,65 @@ class App extends Component {
         
         if (validCoordinates.length > 0) {
           const finalCoordinates =
-            validCoordinates[generateCoordinate(validCoordinates.length - 1)]
+            validCoordinates[generateRandomInteger(validCoordinates.length - 1)]
           for (const coordinate of finalCoordinates) {
-            gridCopy[coordinate[0]][coordinate[1]].type = 'ship'
+            grid[coordinate[0]][coordinate[1]].type = 'ship'
           }
-          console.log('gridCopy cruiser', gridCopy)
-          return gridCopy
-        } else {
-          console.log('gonna run generateCruiser(gridCopy)')
-          return generateCruiser(gridCopy)
-        }
+          return grid
+        } 
+          return generateCruiser(grid)
+        
       }
 
       const generateBattleShip = grid => {
-        const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
-        const x = generateCoordinate(lengthLimit - 1)
-        const y = generateCoordinate(lengthLimit - 1)
+        // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
+        const x = generateRandomInteger(lengthLimit - 1)
+        const y = generateRandomInteger(lengthLimit - 1)
         const validCoordinates = generateLinearShipCoordinates(
           x,
           y,
           3)
         
-        // const finalValidCoordinates = getElValidCoordinates(
-        //   gridCopy,
-        //   validCoordinates
-        // )
-        // getElValidCoordinates(gridCopy, validCoordinates)
+        let finalValidCoordinates = []
+        // console.log(getElValidCoordinates(
+        //   grid,
+        //   validCoordinates 
+        // ))
+        if(validCoordinates.length) {
+          finalValidCoordinates = getElValidCoordinates(
+            grid,
+            validCoordinates 
+          )
+          console.log("finalValidCoordinates",finalValidCoordinates)
+        }
 
-        if (validCoordinates.length) {
+        if (finalValidCoordinates.length) {
           const finalCoordinates =
-            validCoordinates[generateCoordinate(validCoordinates.length - 1)]
+            finalValidCoordinates[generateRandomInteger(finalValidCoordinates.length - 1)]
           for (const coordinate of finalCoordinates) {
-            gridCopy[coordinate[0]][coordinate[1]].type = 'ship'
+            grid[coordinate[0]][coordinate[1]].type = 'ship'
           }
-          return gridCopy
+          return grid
         } 
-          console.log('gonna run generateBattleShip(gridCopy)')
-          return generateBattleShip(gridCopy)
+          console.log('gonna run generateBattleShip(grid)')
+          return generateBattleShip(grid)
         
       }
 
       // let gridCopy = [...grid]
-      const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
+      // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
 
-      // generateDestroyer()
-      // generateDestroyer()
-      // generateCruiser()
-      // generateBattleShip()
+      // const a = generateDestroyer(grid)
+      // const b = generateDestroyer(a)
+      // const c = generateCruiser(b)
+      // const d = generateBattleShip(c)
+      // console.log('a', a)
+      // console.log('b',b)
+      // console.log('c',c)
+      // console.log('d',d)
       // return  generateBattleShip(generateCruiser(generateDestroyer(generateDestroyer(gridCopy))))
-      return generateBattleShip(
-        generateCruiser(generateDestroyer(generateDestroyer(gridCopy)))
-      )
+
+      return generateDestroyer(generateDestroyer(generateCruiser(generateBattleShip(grid))))
     }
     const currentStep = this.state.userSetup.step
     this.setState({
@@ -237,8 +228,9 @@ class App extends Component {
       gameStarted: true
     })
 
-    // const gridCopy = this.state.aiBoard.map(row => row.map(cell => ({ ...cell })))
-    const aiGrid = generateAiBoard(this.createSea(10, 10))
+    const gridCopy = this.state.aiBoard.map(row => row.map(cell => ({ ...cell })))
+    // console.log(gridCopy)
+    const aiGrid = generateAiBoard(/*this.state.aiBoard*/gridCopy)
     this.setState({ aiBoard: aiGrid })
   }
 
