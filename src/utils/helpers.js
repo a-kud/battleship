@@ -200,3 +200,7 @@ export function generateLinearShipCoordinates (x, y, length, grid, lengthLimit) 
   }
   return validCoordinates
 }
+
+export function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}

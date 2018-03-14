@@ -9,7 +9,8 @@ import {
   getElValidCoordinates,
   createSea,
   generateRandomInteger,
-  generateLinearShipCoordinates
+  generateLinearShipCoordinates,
+  sleep
 } from './utils/helpers'
 class App extends Component {
   state = {
@@ -35,7 +36,7 @@ class App extends Component {
       'Place a cruiser. Four cell length.',
       'Place first destroyer. It takes one cell.',
       'Place second destroyer. One cell.',
-      'Fire in the hole. Shoot your enemy!',
+      'Shoot your enemy! Fire in the hole!',
       'We are under attack! Take cover'
     ],
     userHits: 0,
@@ -354,14 +355,15 @@ class App extends Component {
           break
         } else {
           updateBoard('aiBoard', 'shot-missed')
-          this.setState({ step: this.state.step + 1 })
+          this.setState({ step: 6 })
         }
       }
       case 6: {
         let x = generateRandomInteger(9)
         let y = generateRandomInteger(9)
 
-        const fire = (randomX, randomY) => {
+        const fire = async (randomX, randomY) => {
+          await sleep(1000)
           const computerHitsCount = this.state.computerHits
           const cellType = this.state.userBoard[randomX][randomY].type
           if (computerHitsCount === cellsToSunk) {
