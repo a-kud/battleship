@@ -1,3 +1,4 @@
+/* eslint no-fallthrough: "warn" */
 import React, { Component } from 'react'
 import './App.css'
 
@@ -6,38 +7,121 @@ import Button from 'material-ui/Button'
 import {
   isCellClearOfShips,
   getElValidCoordinates,
-  createSea
+  createSea,
+  generateRandomInteger,
+  generateLinearShipCoordinates
 } from './utils/helpers'
 class App extends Component {
   state = {
     settings: {
       boardWidth: 10,
-      boardHeight: 10
+      boardHeight: 10,
+      cellsToSunk: 10
     },
     gameStarted: false,
     userBoard: [],
     aiBoard: [],
     userSetup: {
       isComplete: false,
-      step: 0,
-      text: [
-        'Please start game',
-        'Place a battleship. Four cells. L-shaped.',
-        'Place a cruiser. Four cell length.',
-        'Place first destroyer. It takes one cell.',
-        'Place second destroyer. One cell.'
-      ],
       destroyer1Coordinates: [],
       destroyer2Coordinates: [],
       cruiserCoordinates: [],
       battleshipCoordinates: []
-    }
+    },
+    step: 0,
+    text: [
+      'Please start game',
+      'Place a battleship. Four cells. L-shaped.',
+      'Place a cruiser. Four cell length.',
+      'Place first destroyer. It takes one cell.',
+      'Place second destroyer. One cell.',
+      'Fire in the hole. Shoot your enemy!',
+      'We are under attack! Take cover'
+    ],
+    userHits: 0,
+    computerHits: 0
   }
 
   handleGameStart = () => {
     const generateAiBoard = grid => {
       const lengthLimit = this.state.settings.boardWidth
-      const generateRandomInteger = limit => Math.floor(Math.random() * limit)
+      // const generateRandomInteger = limit => Math.floor(Math.random() * limit)
+
+      // /**
+      //  * @param {number} length Ship length
+      //  * @param {number} x Column coordinate
+      //  * @param {number} y Row coordinate
+      //  * @returns {array} Ship coordinates of length size can be placed clear of
+      //  * obstacles
+      //  */
+      // const generateLinearShipCoordinates = (
+      //   x,
+      //   y,
+      //   length,
+      //   elShapeRequested = false
+      // ) => {
+      //   const validCoordinates = []
+      //   if (lengthLimit - y >= length) {
+      //     const southCoordinates = []
+      //     for (let i = 0; i < length; i += 1) {
+      //       if (
+      //         grid[x][y + i].type !== 'ship' &&
+      //         isCellClearOfShips(grid, x, y + i)
+      //       ) {
+      //         southCoordinates.push([x, y + i])
+      //       }
+      //     }
+      //     if (southCoordinates.length === length) {
+      //       validCoordinates.push(southCoordinates)
+      //     }
+      //   }
+
+      //   if (lengthLimit - (lengthLimit - 1 - y) >= length) {
+      //     let northCoordinates = []
+      //     for (let i = 0; i < length; i++) {
+      //       if (
+      //         grid[x][y - i].type !== 'ship' &&
+      //         isCellClearOfShips(grid, x, y - i)
+      //       ) {
+      //         northCoordinates.push([x, y - i])
+      //       }
+      //     }
+      //     if (northCoordinates.length === length) {
+      //       validCoordinates.push(northCoordinates)
+      //     }
+      //   }
+
+      //   if (lengthLimit - (lengthLimit - 1 - x) >= length) {
+      //     const westCoordinates = []
+      //     for (let i = 0; i < length; i += 1) {
+      //       if (
+      //         grid[x - i][y].type !== 'ship' &&
+      //         isCellClearOfShips(grid, x - i, y)
+      //       ) {
+      //         westCoordinates.push([x - i, y])
+      //       }
+      //     }
+      //     if (westCoordinates.length === length) {
+      //       validCoordinates.push(westCoordinates)
+      //     }
+      //   }
+
+      //   if (lengthLimit - x >= length) {
+      //     const eastCoordinates = []
+      //     for (let i = 0; i < length; i += 1) {
+      //       if (
+      //         grid[x + i][y].type !== 'ship' &&
+      //         isCellClearOfShips(grid, x + i, y)
+      //       ) {
+      //         eastCoordinates.push([x + i, y])
+      //       }
+      //     }
+      //     if (eastCoordinates.length === length) {
+      //       validCoordinates.push(eastCoordinates)
+      //     }
+      //   }
+      //   return validCoordinates
+      // }
 
       const generateDestroyer = grid => {
         // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
@@ -50,88 +134,17 @@ class App extends Component {
         }
         return generateDestroyer(grid)
       }
-
-      /**
-       * @param {number} length Ship length
-       * @param {number} x Column coordinate
-       * @param {number} y Row coordinate
-       * @returns {array} Ship coordinates of length size can be placed clear of
-       * obstacles
-       */
-      const generateLinearShipCoordinates = (
-        x,
-        y,
-        length,
-        elShapeRequested = false
-      ) => {
-        const validCoordinates = []
-        if (lengthLimit - y >= length) {
-          const southCoordinates = []
-          for (let i = 0; i < length; i += 1) {
-            if (
-              grid[x][y + i].type !== 'ship' &&
-              isCellClearOfShips(grid, x, y + i)
-            ) {
-              southCoordinates.push([x, y + i])
-            }
-          }
-          if (southCoordinates.length === length) {
-            validCoordinates.push(southCoordinates)
-          }
-        }
-
-        if (lengthLimit - (lengthLimit - 1 - y) >= length) {
-          let northCoordinates = []
-          for (let i = 0; i < length; i++) {
-            if (
-              grid[x][y - i].type !== 'ship' &&
-              isCellClearOfShips(grid, x, y - i)
-            ) {
-              northCoordinates.push([x, y - i])
-            }
-          }
-          if (northCoordinates.length === length) {
-            validCoordinates.push(northCoordinates)
-          }
-        }
-
-        if (lengthLimit - (lengthLimit - 1 - x) >= length) {
-          const westCoordinates = []
-          for (let i = 0; i < length; i += 1) {
-            if (
-              grid[x - i][y].type !== 'ship' &&
-              isCellClearOfShips(grid, x - i, y)
-            ) {
-              westCoordinates.push([x - i, y])
-            }
-          }
-          if (westCoordinates.length === length) {
-            validCoordinates.push(westCoordinates)
-          }
-        }
-
-        if (lengthLimit - x >= length) {
-          const eastCoordinates = []
-          for (let i = 0; i < length; i += 1) {
-            if (
-              grid[x + i][y].type !== 'ship' &&
-              isCellClearOfShips(grid, x + i, y)
-            ) {
-              eastCoordinates.push([x + i, y])
-            }
-          }
-          if (eastCoordinates.length === length) {
-            validCoordinates.push(eastCoordinates)
-          }
-        }
-        return validCoordinates
-      }
-
       const generateCruiser = grid => {
         // const grid = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
-        const validCoordinates = generateLinearShipCoordinates(x, y, 4)
+        const validCoordinates = generateLinearShipCoordinates(
+          x,
+          y,
+          4,
+          grid,
+          lengthLimit
+        )
 
         if (validCoordinates.length > 0) {
           const finalCoordinates =
@@ -143,22 +156,27 @@ class App extends Component {
         }
         return generateCruiser(grid)
       }
-
       const generateBattleShip = grid => {
         // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
-        const validCoordinates = generateLinearShipCoordinates(x, y, 3)
+        const validCoordinates = generateLinearShipCoordinates(
+          x,
+          y,
+          3,
+          grid,
+          lengthLimit
+        )
 
         let finalValidCoordinates = []
         if (validCoordinates.length) {
           finalValidCoordinates = getElValidCoordinates(grid, validCoordinates)
         }
         if (finalValidCoordinates.length) {
-          const finalCoordinates =
-            finalValidCoordinates[
-              generateRandomInteger(finalValidCoordinates.length - 1)
-            ]
+          const randomIndex = generateRandomInteger(
+            finalValidCoordinates.length - 1
+          )
+          const finalCoordinates = finalValidCoordinates[randomIndex]
           for (const coordinate of finalCoordinates) {
             grid[coordinate[0]][coordinate[1]].type = 'ship'
           }
@@ -168,14 +186,13 @@ class App extends Component {
       }
 
       return generateCruiser(
-        generateCruiser(generateDestroyer(generateBattleShip(grid)))
+        generateDestroyer(generateDestroyer(generateBattleShip(grid)))
       )
     }
-    const currentStep = this.state.userSetup.step
-    this.setState({
-      userSetup: { ...this.state.userSetup, step: currentStep + 1 },
+    this.setState(prevState => ({
+      step: prevState.step + 1,
       gameStarted: true
-    })
+    }))
 
     const aiGrid = generateAiBoard(this.state.aiBoard)
     this.setState({ aiBoard: aiGrid })
@@ -211,6 +228,8 @@ class App extends Component {
     let alreadyPlacedCellCountSouth = 0
     let alreadyPlacedCellCountWest = 0
     let alreadyPlacedCellCountEast = 0
+
+    // console.log(generateLinearShipCoordinates(x, y, shipLength, grid, 10))
 
     if (
       grid[x][y].type === 'sea' &&
@@ -280,11 +299,21 @@ class App extends Component {
   }
 
   handleClick = (x, y) => {
-    console.log(`x: ${x}, y: ${y}`)
     const setShipCoordinates = (shipClass, length = 1) => {
       const board = this.state.userSetup
-      const currentStep = board.step
+      const currentStep = this.state.step
       const isCoordinatesNotReady = board[shipClass].length < length - 1
+
+      const completeSetup = () => {
+        if (currentStep === 4 && !isCoordinatesNotReady) {
+          this.setState(prevState => ({
+            userSetup: {
+              ...prevState.userSetup,
+              isComplete: !prevState.userSetup.isComplete
+            }
+          }))
+        }
+      }
 
       this.setState(prevState => {
         const userBoardCopy = [...prevState.userBoard]
@@ -306,33 +335,35 @@ class App extends Component {
           }
         }
 
-        if (currentStep === 4 && !isCoordinatesNotReady) {
-          this.setState(prevState => ({
-            userSetup: {
-              ...prevState.userSetup,
-              isComplete: !prevState.userSetup.isComplete
-            }
-          }))
-        }
-
         return {
           userSetup: {
             ...prevState.userSetup,
-            step: prevState.userSetup.step + 1,
             [shipClass]: [...prevState.userSetup[shipClass], [x, y]]
           },
-          userBoard: userBoardCopy
+          userBoard: userBoardCopy,
+          step: prevState.step + 1
         }
-      })
+      }, completeSetup)
     }
 
-    const updateBoard = () => {
-      const userBoardCopy = [...this.state.userBoard]
-      userBoardCopy[x][y].type = 'ship'
-      this.setState({ userBoard: userBoardCopy })
+    const updateBoard = (
+      boardName = 'userBoard',
+      type = 'ship',
+      xCoord = x,
+      yCoord = y
+    ) => {
+      const userBoardCopy = [...this.state[boardName]]
+      userBoardCopy[xCoord][yCoord].type = type
+      this.setState({ [boardName]: userBoardCopy })
+    }
+    const updateHitsCount = (counterName = 'userHits') => {
+      this.setState(prevState => ({
+        [counterName]: prevState[counterName] + 1
+      }))
     }
 
-    switch (this.state.userSetup.step) {
+    const cellsToSunk = this.state.settings.cellsToSunk
+    switch (this.state.step) {
       case 1: {
         if (
           this.isValidPlacement(
@@ -386,6 +417,61 @@ class App extends Component {
         }
         break
       }
+      case 5: {
+        const cellType = this.state.aiBoard[x][y].type
+        const userHitsCount = this.state.userHits
+
+        if (userHitsCount === cellsToSunk) {
+          alert('Congratulations, captain. You beat the enemy.')
+          break
+        }
+        if (cellType.includes('shot-missed') || cellType.includes('shiphit')) {
+          alert('You have shot at this cell before.')
+          break
+        }
+        if (this.state.aiBoard[x][y].type.includes('ship')) {
+          updateBoard('aiBoard', 'ship shiphit')
+          updateHitsCount()
+          break
+        } else {
+          updateBoard('aiBoard', 'shot-missed')
+          this.setState({ step: this.state.step + 1 })
+        }
+      }
+      case 6: {
+        let x = generateRandomInteger(9)
+        let y = generateRandomInteger(9)
+
+        const fire = (randomX, randomY) => {
+          const computerHitsCount = this.state.computerHits
+          const cellType = this.state.userBoard[randomX][randomY].type
+          if (computerHitsCount === cellsToSunk) {
+            alert('You have lost. Your fleet was destroyed.')
+            return
+          }
+          if (
+            cellType.includes('shot-missed') ||
+            cellType.includes('shiphit')
+          ) {
+            return fire(generateRandomInteger(9), generateRandomInteger(9))
+          }
+          if (cellType.includes('ship')) {
+            updateBoard(
+              'userBoard',
+              'ship ship-userset shiphit',
+              randomX,
+              randomY
+            )
+            updateHitsCount('computerHits')
+            return fire(generateRandomInteger(9), generateRandomInteger(9))
+          } else {
+            updateBoard('userBoard', 'shot-missed', randomX, randomY)
+            this.setState({ step: 5 })
+          }
+        }
+        fire(x, y)
+        break
+      }
       default:
         break
     }
@@ -401,7 +487,6 @@ class App extends Component {
   }
 
   render () {
-    const setupComplete = this.state.userSetup.isComplete
     return (
       <div id='app'>
         <div className='controls'>
@@ -416,22 +501,20 @@ class App extends Component {
           </Button>
           <div className='game-status'>
             <h2>Game status:</h2>
-            <p>
-              {setupComplete
-                ? 'TODO fire shots text'
-                : this.state.userSetup.text[this.state.userSetup.step]}
-            </p>
+            <p>{this.state.text[this.state.step]}</p>
           </div>
         </div>
 
         <Board
           board={this.state.userBoard}
           label={'Self'}
+          isUserSetupDone={this.state.userSetup.isComplete}
           onClick={this.handleClick}
         />
         <Board
           board={this.state.aiBoard}
           onClick={this.handleClick}
+          isUserSetupDone={this.state.userSetup.isComplete}
           label={'Opponent'}
         />
       </div>

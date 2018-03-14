@@ -13,18 +13,16 @@ class Cell extends Component {
   }
 
   handleClick = () => {
-    const { coord, label } = this.props
-    // if (label === 'Self') {
-    //   this.props.onClick(coord.x, coord.y)
-    // }
-    // if (label === 'Opponent') {
-    //   console.log(coord.x, coord.y)
-    // }
-    this.props.onClick(coord.x, coord.y)
+    const { coord, label, isUserSetupDone } = this.props
+    if (isUserSetupDone && label === 'Opponent') {
+      this.props.onClick(coord.x, coord.y)
+    }
+    if (label === 'Self' && !isUserSetupDone) {
+      this.props.onClick(coord.x, coord.y)
+    }
   }
 
   render () {
-    // const { className } = this.props
     const { type } = this.props
     return <div className={type} onClick={this.handleClick} />
   }

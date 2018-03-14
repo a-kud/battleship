@@ -6,6 +6,15 @@ export function generateQuickGuid () {
 }
 
 /**
+ *
+ * @param {number} max Positive interger number
+ * @returns {number} Random integer in range [0, limit]
+ */
+export function generateRandomInteger (max) {
+  return Math.floor(Math.random() * (max + 1))
+}
+
+/**
  * Generates game grid of width by height size
  * width, height - numbers
  * returns array
@@ -118,4 +127,76 @@ export function getElValidCoordinates (grid, validLineCoordinates) {
 
     return allShipCoordinates
   }
+}
+
+/**
+ * @param {number} length Ship length
+ * @param {number} x Column coordinate
+ * @param {number} y Row coordinate
+ * @param {number} lengthLimit Grid length
+ * @returns {array} Ship coordinates of length size can be placed clear of
+ * obstacles
+ */
+export function generateLinearShipCoordinates (x, y, length, grid, lengthLimit) {
+  const validCoordinates = []
+  if (lengthLimit - y >= length) {
+    const southCoordinates = []
+    for (let i = 0; i < length; i += 1) {
+      if (
+        !grid[x][y + i].type.includes('ship') &&
+        isCellClearOfShips(grid, x, y + i)
+      ) {
+        southCoordinates.push([x, y + i])
+      }
+    }
+    if (southCoordinates.length === length) {
+      validCoordinates.push(southCoordinates)
+    }
+  }
+
+  if (lengthLimit - (lengthLimit - 1 - y) >= length) {
+    let northCoordinates = []
+    for (let i = 0; i < length; i++) {
+      if (
+        !grid[x][y - i].type.includes('ship') &&
+        isCellClearOfShips(grid, x, y - i)
+      ) {
+        northCoordinates.push([x, y - i])
+      }
+    }
+    if (northCoordinates.length === length) {
+      validCoordinates.push(northCoordinates)
+    }
+  }
+
+  if (lengthLimit - (lengthLimit - 1 - x) >= length) {
+    const westCoordinates = []
+    for (let i = 0; i < length; i += 1) {
+      if (
+        !grid[x - i][y].type.includes('ship') &&
+        isCellClearOfShips(grid, x - i, y)
+      ) {
+        westCoordinates.push([x - i, y])
+      }
+    }
+    if (westCoordinates.length === length) {
+      validCoordinates.push(westCoordinates)
+    }
+  }
+
+  if (lengthLimit - x >= length) {
+    const eastCoordinates = []
+    for (let i = 0; i < length; i += 1) {
+      if (
+        !grid[x + i][y].type.includes('ship') &&
+        isCellClearOfShips(grid, x + i, y)
+      ) {
+        eastCoordinates.push([x + i, y])
+      }
+    }
+    if (eastCoordinates.length === length) {
+      validCoordinates.push(eastCoordinates)
+    }
+  }
+  return validCoordinates
 }

@@ -19,7 +19,7 @@
   margin-top: 2rem;
 }
 
-.row-label, .column-label, .sea, .ship {
+.row-label, .column-label, .sea, .ship, .shot-missed, .shiphit {
   width: 2rem;
   height: 2rem;
 }
@@ -34,4 +34,12 @@
 
 .ship, .ship-set {
   background-color: grey;
+}
+
+.shot-missed {
+  background-color: whitesmoke
+}
+
+.shiphit {
+  background-color: mediumvioletred
 }
