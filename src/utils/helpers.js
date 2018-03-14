@@ -5,6 +5,23 @@ export function generateQuickGuid () {
     .substring(2, 10)
 }
 
+/**
+ * Generates game grid of width by height size
+ * width, height - numbers
+ * returns array
+ */
+export function createSea (width, height) {
+  const rows = Array.from({ length: height })
+  const columns = Array.from({ length: width })
+  return rows.map((row, x) =>
+    columns.map((column, y) => ({
+      x: x,
+      y: y,
+      type: 'sea'
+    }))
+  )
+}
+
 export function isCellClearOfShips (grid, i, j, typesRequested = false) {
   let rowLimit = 9
   let columnLimit = 9
@@ -93,7 +110,6 @@ export function getElValidCoordinates (grid, validLineCoordinates) {
         } else if (coord[0] + 1 === lengthLimit) {
           allShipCoordinates.push([checkWest(coord[0], coord[1]), ...shipCoord])
         } else {
-          console.log('error', coord[0], coord[1])
           allShipCoordinates.push([checkWest(coord[0], coord[1]), ...shipCoord])
           allShipCoordinates.push([checkEast(coord[0], coord[1]), ...shipCoord])
         }

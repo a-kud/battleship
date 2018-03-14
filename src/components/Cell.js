@@ -14,12 +14,13 @@ class Cell extends Component {
 
   handleClick = () => {
     const { coord, label } = this.props
-    if (label === 'Self') {
-      this.props.onClick(coord.x, coord.y)
-    }
-    if (label === 'Opponent') {
-      console.log(coord.x, coord.y)
-    }
+    // if (label === 'Self') {
+    //   this.props.onClick(coord.x, coord.y)
+    // }
+    // if (label === 'Opponent') {
+    //   console.log(coord.x, coord.y)
+    // }
+    this.props.onClick(coord.x, coord.y)
   }
 
   render () {

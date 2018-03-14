@@ -3,7 +3,11 @@ import './App.css'
 
 import { Board } from './components/Board'
 import Button from 'material-ui/Button'
-import { isCellClearOfShips, getElValidCoordinates } from './utils/helpers'
+import {
+  isCellClearOfShips,
+  getElValidCoordinates,
+  createSea
+} from './utils/helpers'
 class App extends Component {
   state = {
     settings: {
@@ -30,23 +34,6 @@ class App extends Component {
     }
   }
 
-  /**
-   * Generates game grid of width by height size
-   * width, height - numbers
-   * returns array
-   */
-  createSea = (width, height) => {
-    const rows = Array.from({ length: height })
-    const columns = Array.from({ length: width })
-    return rows.map((row, x) =>
-      columns.map((column, y) => ({
-        x: x,
-        y: y,
-        type: 'sea'
-      }))
-    )
-  }
-
   handleGameStart = () => {
     const generateAiBoard = grid => {
       const lengthLimit = this.state.settings.boardWidth
@@ -68,7 +55,7 @@ class App extends Component {
        * @param {number} length Ship length
        * @param {number} x Column coordinate
        * @param {number} y Row coordinate
-       * @returns {array} Coordinates ship of length size can be placed clear of
+       * @returns {array} Ship coordinates of length size can be placed clear of
        * obstacles
        */
       const generateLinearShipCoordinates = (
@@ -190,9 +177,6 @@ class App extends Component {
       gameStarted: true
     })
 
-    // const gridCopy = this.state.aiBoard.map(row =>
-    //   row.map(cell => ({ ...cell }))
-    // )
     const aiGrid = generateAiBoard(this.state.aiBoard)
     this.setState({ aiBoard: aiGrid })
   }
@@ -296,6 +280,7 @@ class App extends Component {
   }
 
   handleClick = (x, y) => {
+    console.log(`x: ${x}, y: ${y}`)
     const setShipCoordinates = (shipClass, length = 1) => {
       const board = this.state.userSetup
       const currentStep = board.step
@@ -303,8 +288,6 @@ class App extends Component {
 
       this.setState(prevState => {
         const userBoardCopy = [...prevState.userBoard]
-
-        console.log(isCoordinatesNotReady)
 
         if (!isCoordinatesNotReady) {
           userBoardCopy[x][y].type = 'ship ship-userset'
@@ -403,10 +386,6 @@ class App extends Component {
         }
         break
       }
-      case 5: {
-        alert('fire')
-        break
-      }
       default:
         break
     }
@@ -416,8 +395,8 @@ class App extends Component {
     const height = this.state.settings.boardHeight
     const width = this.state.settings.boardWidth
     this.setState({
-      userBoard: this.createSea(height, width),
-      aiBoard: this.createSea(height, width)
+      userBoard: createSea(height, width),
+      aiBoard: createSea(height, width)
     })
   }
 
