@@ -45,86 +45,7 @@ class App extends Component {
   handleGameStart = () => {
     const generateAiBoard = grid => {
       const lengthLimit = this.state.settings.boardWidth
-      // const generateRandomInteger = limit => Math.floor(Math.random() * limit)
-
-      // /**
-      //  * @param {number} length Ship length
-      //  * @param {number} x Column coordinate
-      //  * @param {number} y Row coordinate
-      //  * @returns {array} Ship coordinates of length size can be placed clear of
-      //  * obstacles
-      //  */
-      // const generateLinearShipCoordinates = (
-      //   x,
-      //   y,
-      //   length,
-      //   elShapeRequested = false
-      // ) => {
-      //   const validCoordinates = []
-      //   if (lengthLimit - y >= length) {
-      //     const southCoordinates = []
-      //     for (let i = 0; i < length; i += 1) {
-      //       if (
-      //         grid[x][y + i].type !== 'ship' &&
-      //         isCellClearOfShips(grid, x, y + i)
-      //       ) {
-      //         southCoordinates.push([x, y + i])
-      //       }
-      //     }
-      //     if (southCoordinates.length === length) {
-      //       validCoordinates.push(southCoordinates)
-      //     }
-      //   }
-
-      //   if (lengthLimit - (lengthLimit - 1 - y) >= length) {
-      //     let northCoordinates = []
-      //     for (let i = 0; i < length; i++) {
-      //       if (
-      //         grid[x][y - i].type !== 'ship' &&
-      //         isCellClearOfShips(grid, x, y - i)
-      //       ) {
-      //         northCoordinates.push([x, y - i])
-      //       }
-      //     }
-      //     if (northCoordinates.length === length) {
-      //       validCoordinates.push(northCoordinates)
-      //     }
-      //   }
-
-      //   if (lengthLimit - (lengthLimit - 1 - x) >= length) {
-      //     const westCoordinates = []
-      //     for (let i = 0; i < length; i += 1) {
-      //       if (
-      //         grid[x - i][y].type !== 'ship' &&
-      //         isCellClearOfShips(grid, x - i, y)
-      //       ) {
-      //         westCoordinates.push([x - i, y])
-      //       }
-      //     }
-      //     if (westCoordinates.length === length) {
-      //       validCoordinates.push(westCoordinates)
-      //     }
-      //   }
-
-      //   if (lengthLimit - x >= length) {
-      //     const eastCoordinates = []
-      //     for (let i = 0; i < length; i += 1) {
-      //       if (
-      //         grid[x + i][y].type !== 'ship' &&
-      //         isCellClearOfShips(grid, x + i, y)
-      //       ) {
-      //         eastCoordinates.push([x + i, y])
-      //       }
-      //     }
-      //     if (eastCoordinates.length === length) {
-      //       validCoordinates.push(eastCoordinates)
-      //     }
-      //   }
-      //   return validCoordinates
-      // }
-
       const generateDestroyer = grid => {
-        // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
 
@@ -135,7 +56,6 @@ class App extends Component {
         return generateDestroyer(grid)
       }
       const generateCruiser = grid => {
-        // const grid = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
         const validCoordinates = generateLinearShipCoordinates(
@@ -157,7 +77,6 @@ class App extends Component {
         return generateCruiser(grid)
       }
       const generateBattleShip = grid => {
-        // const gridCopy = grid.map(row => row.map(cell => ({ ...cell })))
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
         const validCoordinates = generateLinearShipCoordinates(
