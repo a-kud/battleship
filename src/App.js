@@ -1,4 +1,4 @@
-/* eslint no-fallthrough: "warn" */
+/* eslint no-fallthrough: "off" */
 import React, { Component } from 'react'
 import './App.css'
 
@@ -10,7 +10,8 @@ import {
   createSea,
   generateRandomInteger,
   generateLinearShipCoordinates,
-  sleep
+  sleep,
+  isArrayInArray
 } from './utils/helpers'
 class App extends Component {
   state = {
@@ -149,12 +150,32 @@ class App extends Component {
     let alreadyPlacedCellCountWest = 0
     let alreadyPlacedCellCountEast = 0
 
-    // console.log(generateLinearShipCoordinates(x, y, shipLength, grid, 10))
-
     if (
       grid[x][y].type === 'sea' &&
       (shipLength === 1 || this.state.userSetup[shipCoordinates].length === 0)
     ) {
+      if (!elShapeRequested) {
+        const name = shipCoordinates + 'Valid'
+
+        const coordinates = generateLinearShipCoordinates(
+          x,
+          y,
+          shipLength,
+          grid,
+          10
+        )
+        if (coordinates.length) {
+          this.setState(prevState => ({
+            userSetup: {
+              ...prevState.userSetup,
+              [name]: coordinates
+            }
+          }))
+        } else {
+          return false
+        }
+      }
+
       return findNeighbors(grid, x, y)
     }
 
@@ -169,9 +190,21 @@ class App extends Component {
     }
 
     if (grid[x][y].type === 'sea' && shipLength > 1) {
+      if (
+        shipCoordinates === 'cruiserCoordinates' &&
+        (this.state.userSetup[shipCoordinates].length === 0 ||
+          this.state.userSetup[shipCoordinates].length === 1)
+      ) {
+        return !!isArrayInArray(
+          this.state.userSetup['cruiserCoordinatesValid'],
+          [x, y]
+        )
+      }
+
       if (!findNeighbors(grid, x, y)) {
         return false
       }
+
       for (
         let i = 1;
         i <= this.state.userSetup[shipCoordinates].length;

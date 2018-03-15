@@ -35,6 +35,7 @@ export function isCellClearOfShips (grid, i, j, typesRequested = false) {
   let rowLimit = 9
   let columnLimit = 9
   let types = []
+
   for (let x = Math.max(0, i - 1); x <= Math.min(i + 1, rowLimit); x++) {
     for (let y = Math.max(0, j - 1); y <= Math.min(j + 1, columnLimit); y++) {
       if (x !== i || y !== j) {
@@ -42,8 +43,7 @@ export function isCellClearOfShips (grid, i, j, typesRequested = false) {
       }
     }
   }
-
-  return typesRequested ? types : !types.includes('ship')
+  return typesRequested ? types : !JSON.stringify(types).includes('ship')
 }
 
 /**
@@ -141,6 +141,7 @@ export function generateLinearShipCoordinates (x, y, length, grid, lengthLimit) 
   const validCoordinates = []
   if (lengthLimit - y >= length) {
     const southCoordinates = []
+
     for (let i = 0; i < length; i += 1) {
       if (
         !grid[x][y + i].type.includes('ship') &&
@@ -203,4 +204,13 @@ export function generateLinearShipCoordinates (x, y, length, grid, lengthLimit) 
 
 export function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export function isArrayInArray (validCoord, coordinate) {
+  return validCoord.some(coordinates =>
+    coordinates.some(coord => {
+      const coordinateAsString = JSON.stringify(coordinate)
+      return JSON.stringify(coord) === coordinateAsString
+    })
+  )
 }
