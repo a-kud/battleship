@@ -50,7 +50,6 @@ class App extends Component {
       const generateDestroyer = grid => {
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
-
         if (grid[x][y].type === 'sea' && isCellClearOfShips(grid, x, y)) {
           grid[x][y].type = 'ship'
           return grid
