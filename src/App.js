@@ -32,7 +32,7 @@ class App extends Component {
     },
     step: 0,
     text: [
-      'Please start game',
+      'Please start the game',
       'Place a battleship. Four cells. L-shaped.',
       'Place a cruiser. Four cell length.',
       'Place first destroyer. It takes one cell.',
@@ -454,7 +454,7 @@ class App extends Component {
             Start
           </Button>
           <div className='game-status'>
-            <p>Game status: {this.state.text[this.state.step]}</p>
+            <p>{this.state.text[this.state.step]}</p>
           </div>
         </div>
         <div className='boards'>

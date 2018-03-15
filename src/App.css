@@ -3,11 +3,11 @@
 }
 
 #app {
-  width: 60rem;
   flex-flow: column nowrap;
+  height: 100vh;
 }
 
-.row-label, .column-label {
+.row-label, .column-label, #app {
   justify-content: center;
   align-items: center;
 }
@@ -59,4 +59,12 @@
 
 .header-self, .header-opponent {
   text-align: center;
+}
+
+.controls, .boards {
+  width: 50rem;
+}
+
+.game-status {
+  margin-left: 2rem;
 }
