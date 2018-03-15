@@ -23,8 +23,9 @@ class Cell extends Component {
   }
 
   render () {
-    const { type } = this.props
-    return <div className={type} onClick={this.handleClick} />
+    const { type, label } = this.props
+    const className = label === 'Self' ? type : 'fog ' + type
+    return <div className={className} onClick={this.handleClick} />
   }
 }
 

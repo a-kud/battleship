@@ -1,9 +1,10 @@
-#app, .grid, .game-columns, .row-label, .column-labels, .column-label, .game-board {
+#app, .grid, .game-columns, .row-label, .column-labels, .column-label, .game-board, .boards, .controls {
   display: flex;
 }
 
 #app {
-  width: 40vw
+  width: 60rem;
+  flex-flow: column nowrap;
 }
 
 .row-label, .column-label {
@@ -25,21 +26,37 @@
 }
 
 .grid {
-  border: 0.125rem solid mediumblue
+  border: 0.125rem solid mediumblue;
 }
+
 .sea {
   background-color: lightblue;
-  border: 0.0625rem solid mediumblue
+  border: 0.0625rem solid mediumblue;
 }
 
 .ship, .ship-set {
   background-color: grey;
+  border: 0.0625rem solid grey
+}
+
+.fog {
+  background-color: darkslategray;
+  border: 0.0625rem solid mediumblue;
 }
 
 .shot-missed {
-  background-color: whitesmoke
+  background-color: whitesmoke;
+  border: 0.0625rem solid mediumblue;
 }
 
 .shiphit {
-  background-color: mediumvioletred
+  background-color: mediumvioletred;
+}
+
+.game-board-self {
+  margin-right: 5rem;
+}
+
+.header-self, .header-opponent {
+  text-align: center;
 }

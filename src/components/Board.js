@@ -13,17 +13,19 @@ Board.propTypes = {
 
 export function Board ({ board, label, onClick, isUserSetupDone }) {
   return (
-    <div className='game-board'>
-      <h3>{label}</h3>
-      <GridLabels row />
-      <div className='game-columns'>
-        <GridLabels column />
-        <Grid
-          onClick={onClick}
-          sea={board}
-          label={label}
-          isUserSetupDone={isUserSetupDone}
-        />
+    <div className={`game-board-${label.toLowerCase()}`}>
+      <h3 className={`header-${label.toLowerCase()}`}>{label}</h3>
+      <div className='game-board '>
+        <GridLabels row />
+        <div className='game-columns'>
+          <GridLabels column />
+          <Grid
+            onClick={onClick}
+            sea={board}
+            label={label}
+            isUserSetupDone={isUserSetupDone}
+          />
+        </div>
       </div>
     </div>
   )

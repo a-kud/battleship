@@ -454,23 +454,23 @@ class App extends Component {
             Start
           </Button>
           <div className='game-status'>
-            <h2>Game status:</h2>
-            <p>{this.state.text[this.state.step]}</p>
+            <p>Game status: {this.state.text[this.state.step]}</p>
           </div>
         </div>
-
-        <Board
-          board={this.state.userBoard}
-          label={'Self'}
-          isUserSetupDone={this.state.userSetup.isComplete}
-          onClick={this.handleClick}
-        />
-        <Board
-          board={this.state.aiBoard}
-          onClick={this.handleClick}
-          isUserSetupDone={this.state.userSetup.isComplete}
-          label={'Opponent'}
-        />
+        <div className='boards'>
+          <Board
+            board={this.state.userBoard}
+            label={'Self'}
+            isUserSetupDone={this.state.userSetup.isComplete}
+            onClick={this.handleClick}
+          />
+          <Board
+            board={this.state.aiBoard}
+            onClick={this.handleClick}
+            isUserSetupDone={this.state.userSetup.isComplete}
+            label={'Opponent'}
+          />
+        </div>
       </div>
     )
   }
