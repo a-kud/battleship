@@ -431,13 +431,17 @@ class App extends Component {
     }
   }
 
+  generateBoards = (boardHeight, boardWidth) => {
+    this.setState({
+      userBoard: createSea(boardHeight, boardWidth),
+      aiBoard: createSea(boardHeight, boardWidth)
+    })
+  }
+
   componentWillMount () {
     const height = this.state.settings.boardHeight
     const width = this.state.settings.boardWidth
-    this.setState({
-      userBoard: createSea(height, width),
-      aiBoard: createSea(height, width)
-    })
+    this.generateBoards(height, width)
   }
 
   render () {
