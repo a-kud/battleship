@@ -65,6 +65,18 @@
   width: 50rem;
 }
 
+.controls {
+  margin-left: 4rem;
+}
+
 .game-status {
   margin-left: 2rem;
+}
+
+.header-top {
+  margin-bottom: 2rem;
+}
+
+.header-top h1, .header-self, .header-opponent {
+  font-weight: lighter;
 }

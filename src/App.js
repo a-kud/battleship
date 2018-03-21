@@ -28,6 +28,7 @@ class App extends Component {
       destroyer1Coordinates: [],
       destroyer2Coordinates: [],
       cruiserCoordinates: [],
+      cruiserCoordinatesValid: [],
       battleshipCoordinates: []
     },
     step: 0,
@@ -442,6 +443,9 @@ class App extends Component {
   render () {
     return (
       <div id='app'>
+        <div className='header-top'>
+          <h1>Welcome to Battleship</h1>
+        </div>
         <div className='controls'>
           <Button
             variant='raised'
