@@ -1,4 +1,4 @@
-import { isCellClearOfShips } from '../../utils/helpers'
+import { isCellClearOfShips, generateRandomInteger } from '../../utils/helpers'
 
 describe('Test of isCellClearOfShips', () => {
   test('returns false on a row with ships', () => {
@@ -18,5 +18,14 @@ describe('Test of isCellClearOfShips', () => {
       )
     )
     expect(isCellClearOfShips(gridArray, 9, 9)).toEqual(true)
+  })
+})
+
+describe('Test generateRandomInteger method', () => {
+  test('Returns less than ten or  ten', () => {
+    Array.from({ length: 100 }, v =>
+      expect(generateRandomInteger(10)).toBeLessThanOrEqual(10)
+    )
+    // expect(randomIntegers).toContain(-1 && 11)
   })
 })
