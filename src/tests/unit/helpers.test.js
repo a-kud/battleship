@@ -21,11 +21,15 @@ describe('Test of isCellClearOfShips', () => {
   })
 })
 
-describe('Test generateRandomInteger method', () => {
+describe('Test generateRandomInteger method. Pass 10 as argument.', () => {
   test('Returns less than ten or  ten', () => {
     Array.from({ length: 100 }, v =>
       expect(generateRandomInteger(10)).toBeLessThanOrEqual(10)
     )
-    // expect(randomIntegers).toContain(-1 && 11)
+  })
+  test('Returns greater than zero or zero', () => {
+    Array.from({ length: 100 }, v =>
+      expect(generateRandomInteger(10)).toBeGreaterThanOrEqual(0)
+    )
   })
 })
