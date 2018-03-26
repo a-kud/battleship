@@ -8,7 +8,7 @@ export function generateQuickGuid () {
 /**
  *
  * @param {number} max Positive interger number
- * @returns {number} Random integer in range [0, limit]
+ * @returns {number} Random integer in range [0, max]
  */
 export function generateRandomInteger (max) {
   return Math.floor(Math.random() * (max + 1))
@@ -19,11 +19,10 @@ export function generateRandomInteger (max) {
  * width, height - numbers
  * returns array
  */
-export function createSea (width, height) {
-  const rows = Array.from({ length: height })
-  const columns = Array.from({ length: width })
-  return rows.map((row, x) =>
-    columns.map((column, y) => ({
+export function createSea (sideLength) {
+  const rowsAndColumns = Array.from({ length: sideLength })
+  return rowsAndColumns.map((row, x) =>
+    rowsAndColumns.map((column, y) => ({
       x: x,
       y: y,
       type: 'sea'

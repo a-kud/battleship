@@ -16,8 +16,7 @@ import {
 class App extends Component {
   state = {
     settings: {
-      boardWidth: 10,
-      boardHeight: 10,
+      boardSideLength: 10,
       cellsToSunk: 10
     },
     gameStarted: false,
@@ -47,7 +46,7 @@ class App extends Component {
 
   handleGameStart = () => {
     const generateAiBoard = grid => {
-      const lengthLimit = this.state.settings.boardWidth
+      const lengthLimit = this.state.settings.boardSideLength
       const generateDestroyer = grid => {
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
@@ -431,17 +430,16 @@ class App extends Component {
     }
   }
 
-  generateBoards = (boardHeight, boardWidth) => {
+  generateBoards = (boardSideLength) => {
     this.setState({
-      userBoard: createSea(boardHeight, boardWidth),
-      aiBoard: createSea(boardHeight, boardWidth)
+      userBoard: createSea(boardSideLength, boardSideLength),
+      aiBoard: createSea(boardSideLength, boardSideLength)
     })
   }
 
   componentWillMount () {
-    const height = this.state.settings.boardHeight
-    const width = this.state.settings.boardWidth
-    this.generateBoards(height, width)
+    const length = this.state.settings.boardSideLength
+    this.generateBoards(length)
   }
 
   render () {
