@@ -16,8 +16,7 @@ import {
 class App extends Component {
   state = {
     settings: {
-      boardWidth: 10,
-      boardHeight: 10,
+      boardSideLength: 10,
       cellsToSunk: 10
     },
     gameStarted: false,
@@ -28,6 +27,7 @@ class App extends Component {
       destroyer1Coordinates: [],
       destroyer2Coordinates: [],
       cruiserCoordinates: [],
+      cruiserCoordinatesValid: [],
       battleshipCoordinates: []
     },
     step: 0,
@@ -46,7 +46,7 @@ class App extends Component {
 
   handleGameStart = () => {
     const generateAiBoard = grid => {
-      const lengthLimit = this.state.settings.boardWidth
+      const lengthLimit = this.state.settings.boardSideLength
       const generateDestroyer = grid => {
         const x = generateRandomInteger(lengthLimit - 1)
         const y = generateRandomInteger(lengthLimit - 1)
@@ -430,18 +430,24 @@ class App extends Component {
     }
   }
 
-  componentWillMount () {
-    const height = this.state.settings.boardHeight
-    const width = this.state.settings.boardWidth
+  generateBoards = (boardSideLength) => {
     this.setState({
-      userBoard: createSea(height, width),
-      aiBoard: createSea(height, width)
+      userBoard: createSea(boardSideLength, boardSideLength),
+      aiBoard: createSea(boardSideLength, boardSideLength)
     })
+  }
+
+  componentWillMount () {
+    const length = this.state.settings.boardSideLength
+    this.generateBoards(length)
   }
 
   render () {
     return (
       <div id='app'>
+        <div className='header-top'>
+          <h1>Welcome to Battleship</h1>
+        </div>
         <div className='controls'>
           <Button
             variant='raised'
